@@ -1,0 +1,36 @@
+{
+  "items": [],
+  "datasets": [],
+  "statsBulletins": [
+    {
+      "uri": "/peoplepopulationandcommunity/birthsdeathsandmarriages/conceptionandfertilityrates/bulletins/conceptionsinenglandandwales/2013-02-26"
+    },
+    {
+      "uri": "/peoplepopulationandcommunity/birthsdeathsandmarriages/conceptionandfertilityrates/bulletins/conceptionsinenglandandwales/2015-02-24"
+    },
+    {
+      "uri": "/peoplepopulationandcommunity/birthsdeathsandmarriages/conceptionandfertilityrates/bulletins/conceptionsinenglandandwales/2014-02-25"
+    },
+    {"uri":"/peoplepopulationandcommunity/birthsdeathsandmarriages/conceptionandfertilityrates/bulletins/cohortfertility/2011-12-16"}, 
+    {"uri":"/peoplepopulationandcommunity/birthsdeathsandmarriages/conceptionandfertilityrates/bulletins/cohortfertility/2013-03-07"},
+    {"uri":"/peoplepopulationandcommunity/birthsdeathsandmarriages/conceptionandfertilityrates/bulletins/cohortfertility/2013-12-05"}
+  ],
+  "index": 2,
+  "type": "product_page",
+  "uri": "/peoplepopulationandcommunity/birthsdeathsandmarriages/conceptionandfertilityrates",
+  "breadcrumb": [
+    {
+      "uri": "/"
+    },
+    {
+      "uri": "/peoplepopulationandcommunity"
+    },
+    {
+      "uri": "/peoplepopulationandcommunity/birthsdeathsandmarriages"
+    }
+  ],
+  "description": {
+    "title": "Conception and fertility rates",
+    "summary": "We look at total conceptions, broken down by age, plus average completed family size and childlessness."
+  }
+}

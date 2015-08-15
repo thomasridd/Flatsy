@@ -1,0 +1,31 @@
+{
+  "items": [],
+  "datasets": [],
+  "statsBulletins": [],
+  "relatedArticles": [
+    {
+      "uri": "/peoplepopulationandcommunity/culturalidentity/language/articles/detailedanalysisenglishlanguageproficiencyinenglandandwales/2013-08-30"
+    },
+    {
+      "uri": "/peoplepopulationandcommunity/culturalidentity/language/articles/languageinenglandandwales/2013-03-04"
+    }
+  ],
+  "index": 1,
+  "type": "product_page",
+  "uri": "/peoplepopulationandcommunity/culturalidentity/language",
+  "breadcrumb": [
+    {
+      "uri": "/"
+    },
+    {
+      "uri": "/peoplepopulationandcommunity"
+    },
+    {
+      "uri": "/peoplepopulationandcommunity/culturalidentity"
+    }
+  ],
+  "description": {
+    "title": "Language",
+    "summary": "Data on the proportion of adults using English as their main language and a breakdown of other languages used in the UK."
+  }
+}

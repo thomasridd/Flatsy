@@ -14,16 +14,28 @@ import java.nio.file.Paths;
  */
 public class Builder {
     public static Path copyFlatFiles() throws IOException {
-        Path tempDir = Files.createTempDirectory("flatfiletest");
+        Path tempDir = Files.createTempDirectory("flatsytest");
         return copyFlatFiles(tempDir);
     }
     public static Path copyFlatFiles(Path toPath) throws IOException {
-        URL flatfiletest = Builder.class.getResource("/flatfiletest");
+        URL flatfiletest = Builder.class.getResource("/flatsytest");
         FileUtils.copyDirectory(Paths.get(flatfiletest.getPath()).toFile(), toPath.toFile());
         return toPath;
     }
     public static Path refreshFlatFiles(Path atPath) throws IOException {
         FileUtils.deleteDirectory(atPath.toFile());
         return copyFlatFiles(atPath);
+    }
+
+    public static Path cursorTestDatabase() throws IOException {
+        Path tempDir = Files.createTempDirectory("flatsytest");
+
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(tempDir);
+        db.create(new FlatsyObject("alpha/one.json", db), "Alpha1");
+        db.create(new FlatsyObject("alpha/two.json", db), "Alpha2");
+        db.create(new FlatsyObject("beta/three.json", db), "Beta1");
+        db.create(new FlatsyObject("beta/four.json", db), "Beta2");
+
+        return tempDir;
     }
 }

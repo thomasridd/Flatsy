@@ -36,8 +36,7 @@ public interface FlatsyDatabase {
      * This is particularly applicable to binary files
      *
      * @param object a FlatsyObject with valid URI
-     * @param stream an output stream to write content
-     * @return null
+     * @return an inputstream of the content
      */
     public InputStream retrieveStream(FlatsyObject object) throws IOException;
 
@@ -48,14 +47,14 @@ public interface FlatsyDatabase {
     public void delete(FlatsyObject object);
 
     /**
-     * A list of objects that fall next in the graph
+     * Gets a list of objects that belong to a specified parent node
      *
      * In filesystem terms the folder contents
      *
      * @param object giving the base uri
      * @return
      */
-    public List<FlatsyObject> subObjects(FlatsyObject object);
+    public List<FlatsyObject> children(FlatsyObject object);
 
 
 

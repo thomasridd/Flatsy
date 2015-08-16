@@ -90,7 +90,7 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
     }
 
     @Override
-    public List<FlatsyObject> subObjects(FlatsyObject object) {
+    public List<FlatsyObject> children(FlatsyObject object) {
         List<FlatsyObject> objects = new ArrayList<>();
         Path path = toPath(object.uri);
 

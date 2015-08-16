@@ -10,11 +10,8 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
 
@@ -281,7 +278,7 @@ Path root = null;
     }
 
     @Test
-    public void subObjectList_givenAFolder_shouldGiveListOfFolderContents() {
+    public void childList_givenAFolder_shouldGiveListOfFolderContents() {
         // Given
         // A folder with some content
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
@@ -294,7 +291,7 @@ Path root = null;
 
         // When
         // We get a list of subobjects
-        List<FlatsyObject> flatsyObjects = db.subObjects(folder);
+        List<FlatsyObject> flatsyObjects = db.children(folder);
 
         // Then
         // It should contain contents of that folder

@@ -7,33 +7,26 @@ import com.github.thomasridd.flatsy.update.FlatsyUpdate;
 /**
  * Created by Tom.Ridd on 15/08/15.
  */
-public class FlatsyObject {
+public class FlatsyObject implements Comparable {
     FlatsyDatabase db;
     String uri;
 
     public FlatsyObject(String uri, FlatsyDatabase db) {
-        this.uri = uri;
+        this.uri = uri.toLowerCase();
         this.db = db;
     }
 
     public FlatsyObjectType getType() {
-        return FlatsyObjectType.JSONFile;
-    }
-
-    public String get() {
-        return "";
-    }
-    public void write(String content) {
-
-    }
-    public void update(FlatsyUpdate update) {
-
-    }
-    public void delete() {
-
+        return db.type(this.uri);
     }
 
     public FlatsyCursor query(FlatsyQuery flatsyQuery) {
         return flatsyQuery.runWithRoot(this);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        FlatsyObject obj = (FlatsyObject) o;
+        return this.uri.compareTo(obj.uri);
     }
 }

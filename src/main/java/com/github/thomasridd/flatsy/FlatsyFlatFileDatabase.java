@@ -4,8 +4,11 @@ import com.github.thomasridd.flatsy.update.FlatsyUpdate;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -88,7 +91,15 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
 
     @Override
     public List<FlatsyObject> subObjects(FlatsyObject object) {
-        return null;
+        List<FlatsyObject> objects = new ArrayList<>();
+        Path path = toPath(object.uri);
+
+        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)) {
+            for (Path p : directoryStream) {
+                objects.add(new FlatsyObject(this.root.relativize(p).toString(), this));
+            }
+        } catch (IOException ex) {}
+        return objects;
     }
 
     @Override

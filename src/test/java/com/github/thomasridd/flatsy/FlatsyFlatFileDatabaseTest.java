@@ -11,6 +11,9 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
@@ -277,5 +280,27 @@ Path root = null;
         assertEquals(FlatsyObjectType.Null, db.type(uri));
     }
 
+    @Test
+    public void subObjectList_givenAFolder_shouldGiveListOfFolderContents() {
+        // Given
+        // A folder with some content
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
 
+        FlatsyObject folder = new FlatsyObject("test", db);
+        db.create(new FlatsyObject("test/file.json", db), "testing");
+        db.create(new FlatsyObject("test/folder/file.json", db), "testing");
+
+        assertEquals(FlatsyObjectType.Folder, folder.getType());
+
+        // When
+        // We get a list of subobjects
+        List<FlatsyObject> flatsyObjects = db.subObjects(folder);
+
+        // Then
+        // It should contain contents of that folder
+        Collections.sort(flatsyObjects);
+        assertEquals(2, flatsyObjects.size());
+        assertEquals("test/file.json", flatsyObjects.get(0).uri);
+        assertEquals("test/folder", flatsyObjects.get(1).uri);
+    }
 }

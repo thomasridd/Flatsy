@@ -20,7 +20,7 @@ public interface FlatsyDatabase {
     public FlatsyObject rootObject();
 
     public void create(FlatsyObject object, String content);
-    public void create(FlatsyObject object, InputStream content);
+    public void create(FlatsyObject object, InputStream content) throws IOException;
 
     /**
      * Retrieves the string contents for the FlatsyObject database object
@@ -39,7 +39,7 @@ public interface FlatsyDatabase {
      * @param stream an output stream to write content
      * @return null
      */
-    public String retrieve(FlatsyObject object, OutputStream stream);
+    public InputStream retrieveStream(FlatsyObject object) throws IOException;
 
     public <T> Object retrieveAs(FlatsyObject object, Class<T> tClass);
 
@@ -47,15 +47,17 @@ public interface FlatsyDatabase {
 
     public void delete(FlatsyObject object);
 
-    public List<FlatsyObject> subObjects(FlatsyObject object);
-
     /**
-     * Provides a FlatsyObject on the uri
+     * A list of objects that fall next in the graph
      *
-     * @param uri
+     * In filesystem terms the folder contents
+     *
+     * @param object giving the base uri
      * @return
      */
-    public FlatsyObject key(String uri);
+    public List<FlatsyObject> subObjects(FlatsyObject object);
+
+
 
     public FlatsyObjectType type(String uri);
 }

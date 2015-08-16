@@ -1,7 +1,7 @@
 package com.github.thomasridd.flatsy;
 
 import com.github.thomasridd.flatsy.update.FlatsyUpdate;
-import sun.misc.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -27,17 +27,29 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
 
     @Override
     public void create(FlatsyObject object, String content) {
+        Path path = toPath(object.uri);
 
+        try {
+            path.toFile().getParentFile().mkdirs();
+            Files.write(path, content.getBytes());
+        } catch (IOException e) {
+            System.out.println("Error in create " + object.uri);
+        }
     }
 
     @Override
-    public void create(FlatsyObject object, InputStream content) {
+    public void create(FlatsyObject object, InputStream content) throws IOException {
+        Path path = toPath(object.uri);
 
+        path.toFile().getParentFile().mkdirs();
+        try(OutputStream outputStream = Files.newOutputStream(path)) {
+            IOUtils.copy(content, outputStream);
+        }
     }
 
     @Override
     public String retrieve(FlatsyObject object)  {
-        Path path = this.root.resolve(object.uri);
+        Path path = toPath(object.uri);
 
         String content = null;
         try {
@@ -49,8 +61,9 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
     }
 
     @Override
-    public String retrieve(FlatsyObject object, OutputStream stream) {
-        return null;
+    public InputStream retrieveStream(FlatsyObject object) throws IOException {
+        Path path = toPath(object.uri);
+        return Files.newInputStream(path);
     }
 
     @Override
@@ -65,11 +78,39 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
 
     @Override
     public void delete(FlatsyObject object) {
-
+        Path path = toPath(object.uri);
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            System.out.println("error in delete: " + object.uri);
+        }
     }
 
     @Override
     public List<FlatsyObject> subObjects(FlatsyObject object) {
         return null;
+    }
+
+    @Override
+    public FlatsyObjectType type(String uri) {
+        Path path = this.root.resolve(uri);
+
+        if (!Files.exists(path)) {
+            return FlatsyObjectType.Null;
+        } else if(Files.isDirectory(path)) {
+            return FlatsyObjectType.Folder;
+        } else if(uri.endsWith(".json")) {
+            return FlatsyObjectType.JSONFile;
+        } else {
+            return FlatsyObjectType.OtherFile;
+        }
+    }
+
+    private Path toPath(String uri) {
+        if (uri.startsWith("/")) {
+            return root.resolve(uri.substring(1));
+        } else {
+            return root.resolve(uri);
+        }
     }
 }

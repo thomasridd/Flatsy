@@ -22,14 +22,14 @@ public class FlatsyCursor {
     List<Integer> treePosition = new ArrayList<>();
 
     public FlatsyCursor(FlatsyObject cursorRoot, FlatsyQuery query) {
-        tree.add(cursorRoot);
-        nodes.add(cursorRoot.children());
-        treePosition.add(-1);
+        this(cursorRoot);
         this.query = query;
     }
     public FlatsyCursor(FlatsyObject cursorRoot) {
         tree.add(cursorRoot);
-        nodes.add(cursorRoot.children());
+        List<FlatsyObject> asList = new ArrayList<>(); asList.add(cursorRoot);
+
+        nodes.add(asList);
         treePosition.add(-1);
         this.query = null;
     }
@@ -87,14 +87,15 @@ public class FlatsyCursor {
             treePosition.set(depth, treePosition.get(depth) + 1); // Advance on this node
 
             FlatsyObject current = nodes.get(depth).get(treePosition.get(depth));
-            if (this.query.matchesObject(current)) { // If our query matches
-                if (this.query.getBlacklister()) {
-                    // this node is poison - move on
+
+            if(this.query.blacklister == true) {
+
+                if (this.query.matchesObject(current)) {
                     return false;
                 } else {
                     // this node is good
                     if (this.query.getSubQuery() == null) {
-                        onNextStepMoveDownTree = (!this.query.getStopOnMatch() && current.getType() == FlatsyObjectType.Folder); // If this isn't the end drop down the file tree
+                        onNextStepMoveDownTree = (current.getType() == FlatsyObjectType.Folder); // If this isn't the end drop down the file tree
                         return true; // Found a result! A final result! Tell the world true
                     } else {
                         this.subCursor = new FlatsyCursor(current, this.query.getSubQuery());
@@ -102,8 +103,9 @@ public class FlatsyCursor {
                     }
                 }
             } else {
-                if (this.query.getBlacklister()) {
-                    // this node isn't blacklisted
+
+                if (this.query.matchesObject(current)) {
+                    // this node is good
                     if (this.query.getSubQuery() == null) {
                         onNextStepMoveDownTree = (!this.query.getStopOnMatch() && current.getType() == FlatsyObjectType.Folder); // If this isn't the end drop down the file tree
                         return true; // Found a result! A final result! Tell the world true
@@ -117,6 +119,7 @@ public class FlatsyCursor {
                     return false;
                 }
             }
+
         }
     }
 
@@ -124,11 +127,7 @@ public class FlatsyCursor {
         if (this.query == null) {
             this.query = newQuery;
         } else {
-            FlatsyQuery tryQuery = this.query;
-            while (tryQuery.getSubQuery() != null) {
-                tryQuery = tryQuery.getSubQuery();
-            }
-            tryQuery.setSubQuery(newQuery);
+            this.query.query(newQuery);
         }
         return this;
     }

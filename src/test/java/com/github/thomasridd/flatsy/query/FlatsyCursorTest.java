@@ -178,6 +178,8 @@ public class FlatsyCursorTest {
         // Then
         // we expect something non null
         assertTrue(cursor.next());
+        assertEquals("", cursor.currentObject().uri);
+        assertTrue(cursor.next());
         assertEquals("alpha", cursor.currentObject().uri);
         assertTrue(cursor.next());
         assertEquals("beta", cursor.currentObject().uri);
@@ -199,6 +201,8 @@ public class FlatsyCursorTest {
 
         // Then
         // we expect something non null
+        assertTrue(cursor.next());
+        assertEquals("", cursor.currentObject().uri);
         assertTrue(cursor.next());
         assertEquals("beta", cursor.currentObject().uri);
         assertTrue(cursor.next());
@@ -280,5 +284,28 @@ public class FlatsyCursorTest {
         assertEquals("beta/test/four.json", cursor.currentObject().uri);
         assertFalse(cursor.next());
 
+    }
+
+    @Test
+    public void contentContainsQuery_givenDatabase_shouldReturnFiles() {
+        // Given
+        // a database system and a simple query (that should bring results)
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
+        db.create(new FlatsyObject("alpha/contains_word.json", db), "I contain the word camel");
+        db.create(new FlatsyObject("test/contains_word.json", db), "My camel is called Louise");
+
+        FlatsyQuery query = new FlatsyQueryContentContains("camel");
+
+        // When
+        // we create a cursor
+        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+
+        // Then
+        // we expect something non null
+        assertTrue(cursor.next());
+        assertEquals("alpha/contains_word.json", cursor.currentObject().uri);
+        assertTrue(cursor.next());
+        assertEquals("test/contains_word.json", cursor.currentObject().uri);
+        assertFalse(cursor.next());
     }
 }

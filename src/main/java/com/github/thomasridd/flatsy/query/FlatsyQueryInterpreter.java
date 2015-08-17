@@ -21,14 +21,14 @@ public class FlatsyQueryInterpreter {
         String queryType = null;
         String arguments = null;
        if (cleanedString.startsWith("{") && cleanedString.endsWith("}") && cleanedString.contains(":")) {
-           cleanedString = cleanedString.substring(1, cleanedString.length() - 2);
-           queryType = cleanedString.substring(0, cleanedString.indexOf(":") - 1);
+           cleanedString = cleanedString.substring(1, cleanedString.length() - 1);
+           queryType = cleanedString.substring(0, cleanedString.indexOf(":"));
            arguments = cleanedString.substring(cleanedString.indexOf(":") + 1);
        } else if (cleanedString.startsWith("{") && cleanedString.endsWith("}")) {
-            queryType = cleanedString.substring(1, cleanedString.length() - 2).trim();
+            queryType = cleanedString.substring(1, cleanedString.length() - 1).trim();
         } else {
             System.out.println("Format for query engine is [blacklist][stop]{<Query Type>:<Arguments>} ");
-            System.out.println("Query types include, uri_begins, uri_ends, uri_contains, is_file, is_folder");
+            System.out.println("Query types include, uri_begins, uri_ends, uri_contains, content_contains, is_file, is_folder");
             return null;
         }
 
@@ -38,6 +38,10 @@ public class FlatsyQueryInterpreter {
             returnQuery = new FlatsyQueryUriStartsWith(arguments);
         } else if (queryType.equalsIgnoreCase("uri_ends")) {
             returnQuery = new FlatsyQueryUriEndsWith(arguments);
+        } else if (queryType.equalsIgnoreCase("uri_contains")) {
+            returnQuery = new FlatsyQueryUriContains(arguments);
+        } else if (queryType.equalsIgnoreCase("content_contains")) {
+            returnQuery = new FlatsyQueryContentContains(arguments);
         } else if (queryType.equalsIgnoreCase("is_file")) {
             returnQuery = new FlatsyQueryIsFile();
         } else if (queryType.equalsIgnoreCase("is_folder")) {

@@ -18,17 +18,53 @@ import java.nio.file.PathMatcher;
  *      useful if you want a list of directories that contain the word "economy" for example but don't want to sort through objects
  *
  */
-public interface FlatsyQuery {
+public class FlatsyQuery {
+    FlatsyQuery subQuery = null;
+    boolean blacklister = false;
+    boolean stopOnMatch = false;
 
-    public boolean matchesObject(FlatsyObject object);
+    public FlatsyQuery query(FlatsyQuery query) {
+        if (this.subQuery == null) {
+            this.subQuery = query;
+        } else {
+            FlatsyQuery parent = this.subQuery;
+            while(parent.subQuery != null) {
+                parent = parent.subQuery;
+            }
+            parent.subQuery = query;
+        }
+        return this;
+    }
+    public FlatsyQuery query(String query) {
+        return query(FlatsyQueryInterpreter.queryStringToFlatsyQuery(query));
+    }
 
-    public void setSubQuery(FlatsyQuery subQuery);
-    public FlatsyQuery getSubQuery();
+    public boolean matchesObject(FlatsyObject object) {
+        return true;
+    };
 
-    public boolean getBlacklister();
-    public void setBlackLister(boolean blackLister);
+    public void setSubQuery(FlatsyQuery subQuery) {
+        this.subQuery = subQuery;
+    }
 
-    public boolean getStopOnMatch();
-    public void setStopOnMatch(boolean stopOnMatch);
+    public FlatsyQuery getSubQuery() {
+        return this.subQuery;
+    }
+
+    public boolean getBlacklister() {
+        return this.blacklister;
+    }
+
+    public void setBlackLister(boolean blackLister) {
+        this.blacklister = blackLister;
+    }
+
+    public boolean getStopOnMatch() {
+        return stopOnMatch;
+    }
+
+    public void setStopOnMatch(boolean stopOnMatch) {
+        this.stopOnMatch = stopOnMatch;
+    }
 
 }

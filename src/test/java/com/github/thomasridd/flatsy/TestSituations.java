@@ -16,7 +16,8 @@ public class TestSituations {
     @Test
     public void iterator_withRealDatabase_worksThroughData() {
 
-        FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/master"));
+        //FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/master"));
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/Tom.Ridd/Documents/onswebsite/zebedee/master"));
 
         FlatsyCursor cursor = db.rootObject().query("blacklist:{uri_contains:timeseries}").query("{uri_ends:data.json}");
 

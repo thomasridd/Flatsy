@@ -19,12 +19,16 @@ import java.nio.file.PathMatcher;
  *
  */
 public interface FlatsyQuery {
-    FlatsyQuery subQuery = null;
-    boolean blackLister = false;
-    boolean stopOnMatch = false;
 
     public boolean matchesObject(FlatsyObject object);
 
-    public boolean isBlackLister();
-    public boolean shouldStopOnMatch();
+    public void setSubQuery(FlatsyQuery subQuery);
+    public FlatsyQuery getSubQuery();
+
+    public boolean getBlacklister();
+    public void setBlackLister(boolean blackLister);
+
+    public boolean getStopOnMatch();
+    public void setStopOnMatch(boolean stopOnMatch);
+
 }

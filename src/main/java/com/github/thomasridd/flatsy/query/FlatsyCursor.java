@@ -2,7 +2,6 @@ package com.github.thomasridd.flatsy.query;
 
 import com.github.thomasridd.flatsy.FlatsyObject;
 import com.github.thomasridd.flatsy.FlatsyObjectType;
-import sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
  */
 public class FlatsyCursor {
     FlatsyQuery query = null;
-    FlatsyQuery subQuery = null;
     FlatsyCursor subCursor = null;
 
 
@@ -28,6 +26,12 @@ public class FlatsyCursor {
         nodes.add(cursorRoot.children());
         treePosition.add(-1);
         this.query = query;
+    }
+    public FlatsyCursor(FlatsyObject cursorRoot) {
+        tree.add(cursorRoot);
+        nodes.add(cursorRoot.children());
+        treePosition.add(-1);
+        this.query = null;
     }
 
     public FlatsyObject currentObject() {
@@ -84,24 +88,52 @@ public class FlatsyCursor {
 
             FlatsyObject current = nodes.get(depth).get(treePosition.get(depth));
             if (this.query.matchesObject(current)) { // If our query matches
-                if (this.query.isBlackLister()) {
+                if (this.query.getBlacklister()) {
                     // this node is poison - move on
-                    treePosition.set(depth, treePosition.get(depth) + 1);
                     return false;
                 } else {
                     // this node is good
-                    if (this.subQuery == null) {
-                        onNextStepMoveDownTree = (!this.query.shouldStopOnMatch() && current.getType() == FlatsyObjectType.Folder); // If this isn't the end drop down the file tree
+                    if (this.query.getSubQuery() == null) {
+                        onNextStepMoveDownTree = (!this.query.getStopOnMatch() && current.getType() == FlatsyObjectType.Folder); // If this isn't the end drop down the file tree
                         return true; // Found a result! A final result! Tell the world true
                     } else {
-                        this.subCursor = new FlatsyCursor(current, subQuery);
+                        this.subCursor = new FlatsyCursor(current, this.query.getSubQuery());
                         return false; // the file walk now steps to the next query level
                     }
                 }
             } else {
-                onNextStepMoveDownTree = current.getType() == FlatsyObjectType.Folder;
-                return false;
+                if (this.query.getBlacklister()) {
+                    // this node isn't blacklisted
+                    if (this.query.getSubQuery() == null) {
+                        onNextStepMoveDownTree = (!this.query.getStopOnMatch() && current.getType() == FlatsyObjectType.Folder); // If this isn't the end drop down the file tree
+                        return true; // Found a result! A final result! Tell the world true
+                    } else {
+                        this.subCursor = new FlatsyCursor(current, this.query.getSubQuery());
+                        return false; // the file walk now steps to the next query level
+                    }
+                } else {
+                    // this node just hasn't been matched
+                    onNextStepMoveDownTree = current.getType() == FlatsyObjectType.Folder;
+                    return false;
+                }
             }
         }
+    }
+
+    public FlatsyCursor query(FlatsyQuery newQuery) {
+        if (this.query == null) {
+            this.query = newQuery;
+        } else {
+            FlatsyQuery tryQuery = this.query;
+            while (tryQuery.getSubQuery() != null) {
+                tryQuery = tryQuery.getSubQuery();
+            }
+            tryQuery.setSubQuery(newQuery);
+        }
+        return this;
+    }
+
+    public FlatsyCursor query(String queryString) {
+        return query(FlatsyQueryInterpreter.queryStringToFlatsyQuery(queryString));
     }
 }

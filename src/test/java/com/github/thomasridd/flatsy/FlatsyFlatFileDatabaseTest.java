@@ -60,8 +60,8 @@ Path root = null;
 
         // Then
         // we expect initialised object
-        assertNotNull(db.rootObject());
-        assertEquals("", db.rootObject().uri);
+        assertNotNull(db.root());
+        assertEquals("", db.root().uri);
     }
 
     @Test

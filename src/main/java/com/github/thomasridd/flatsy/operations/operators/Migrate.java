@@ -2,6 +2,7 @@ package com.github.thomasridd.flatsy.operations.operators;
 
 import com.github.thomasridd.flatsy.FlatsyDatabase;
 import com.github.thomasridd.flatsy.FlatsyObject;
+import com.github.thomasridd.flatsy.FlatsyObjectType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,7 @@ public class Migrate implements FlatsyOperator {
 
     @Override
     public void apply(FlatsyObject object) {
+        if (object.getType() == FlatsyObjectType.Folder || object.getType() == FlatsyObjectType.Null) { return; }
 
         try(InputStream stream = object.retrieveStream();) {
             db.create(object, stream);

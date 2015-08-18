@@ -4,8 +4,6 @@ import com.github.thomasridd.flatsy.Builder;
 import com.github.thomasridd.flatsy.FlatsyDatabase;
 import com.github.thomasridd.flatsy.FlatsyFlatFileDatabase;
 import com.github.thomasridd.flatsy.FlatsyObject;
-import com.github.thomasridd.flatsy.query.matchers.UriContains;
-import com.github.thomasridd.flatsy.query.matchers.UriStartsWith;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -36,7 +34,7 @@ public class FlatsyMatcherBuilderTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject()).query("{uri_starts:beta}");
+        FlatsyCursor cursor = new FlatsyCursor(db.root()).query("{uri_starts:beta}");
 
         // Then
         // we expect something non null
@@ -59,7 +57,7 @@ public class FlatsyMatcherBuilderTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject()).query("{uri_ends:.razzle}");
+        FlatsyCursor cursor = new FlatsyCursor(db.root()).query("{uri_ends:.razzle}");
 
         // Then
         // we expect something non null
@@ -77,7 +75,7 @@ public class FlatsyMatcherBuilderTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject()).query("{uri_contains:one}");
+        FlatsyCursor cursor = new FlatsyCursor(db.root()).query("{uri_contains:one}");
 
         // Then
         // we expect something non null
@@ -98,7 +96,7 @@ public class FlatsyMatcherBuilderTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject()).query("{isfile}");
+        FlatsyCursor cursor = new FlatsyCursor(db.root()).query("{isfile}");
 
         // Then
         // we expect something non null
@@ -121,7 +119,7 @@ public class FlatsyMatcherBuilderTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject()).query("{isfolder}");
+        FlatsyCursor cursor = new FlatsyCursor(db.root()).query("{isfolder}");
 
         // Then
         // we expect something non null
@@ -141,7 +139,7 @@ public class FlatsyMatcherBuilderTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = db.rootObject().query("block:{uri_contains:alpha}");
+        FlatsyCursor cursor = db.root().query("block:{uri_contains:alpha}");
 
         // Then
         // we expect something non null
@@ -165,7 +163,7 @@ public class FlatsyMatcherBuilderTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject()).query("stop:{uri_contains:alpha}");
+        FlatsyCursor cursor = new FlatsyCursor(db.root()).query("stop:{uri_contains:alpha}");
 
         // Then
         // we expect something non null
@@ -186,7 +184,7 @@ public class FlatsyMatcherBuilderTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = db.rootObject().query("block:{uri_starts:Beta}").query("{uri_contains:four}");
+        FlatsyCursor cursor = db.root().query("block:{uri_starts:Beta}").query("{uri_contains:four}");
 
         // Then
         // we expect only the files

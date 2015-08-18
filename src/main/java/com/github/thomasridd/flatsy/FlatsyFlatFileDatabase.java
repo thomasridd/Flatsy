@@ -23,7 +23,7 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
 
 
     @Override
-    public FlatsyObject rootObject() {
+    public FlatsyObject root() {
         return new FlatsyObject("", this);
     }
 

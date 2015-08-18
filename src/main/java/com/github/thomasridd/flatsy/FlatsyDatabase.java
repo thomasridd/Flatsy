@@ -16,7 +16,7 @@ import java.util.List;
  * Flatsy
  */
 public interface FlatsyDatabase {
-    public FlatsyObject rootObject();
+    public FlatsyObject root();
 
     public void create(FlatsyObject object, String content);
     public void create(FlatsyObject object, InputStream content) throws IOException;

@@ -35,7 +35,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null
@@ -51,7 +51,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null
@@ -68,7 +68,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null
@@ -85,7 +85,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null
@@ -109,7 +109,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null
@@ -128,7 +128,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null
@@ -150,7 +150,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null
@@ -174,7 +174,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null
@@ -197,7 +197,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null
@@ -223,7 +223,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null
@@ -253,7 +253,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = db.rootObject().query(startsWith).query(contains);
+        FlatsyCursor cursor = db.root().query(startsWith).query(contains);
 
         // Then
         // we expect only the files
@@ -277,7 +277,7 @@ public class FlatsyCursorTest {
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
+        FlatsyCursor cursor = new FlatsyCursor(db.root(), query);
 
         // Then
         // we expect something non null

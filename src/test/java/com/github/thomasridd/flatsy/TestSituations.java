@@ -3,10 +3,7 @@ package com.github.thomasridd.flatsy;
 import java.nio.file.Paths;
 
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Created by thomasridd on 17/08/15.
@@ -20,7 +17,7 @@ public class TestSituations {
         FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/backup/content_live/zebedee/master"));
         //FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/Tom.Ridd/Documents/onswebsite/zebedee/master"));
 
-        FlatsyCursor cursor = db.rootObject().query("block:{uri_contains:timeseries}").query("{uri_ends:data.json}").query("{content_contains:clegg}");
+        FlatsyCursor cursor = db.root().query("block:{uri_contains:timeseries}").query("{uri_ends:data.json}").query("{content_contains:clegg}");
 
         int counter = 0;
 
@@ -43,7 +40,7 @@ public class TestSituations {
         FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/backup/content_live/zebedee/master"));
         //FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/Tom.Ridd/Documents/onswebsite/zebedee/master"));
 
-        FlatsyCursor cursor = db.rootObject()
+        FlatsyCursor cursor = db.root()
                 .query("block:{uri_contains:timeseries}")
                 .query("{uri_ends:data.json}")
                 .query("{content_contains:" + uri + "}");

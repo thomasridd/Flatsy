@@ -1,10 +1,9 @@
 package com.github.thomasridd.flatsy;
 
-import com.github.thomasridd.flatsy.update.FlatsyUpdate;
+import com.github.thomasridd.flatsy.operations.FlatsyWorker;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -42,7 +41,7 @@ public interface FlatsyDatabase {
 
     public <T> Object retrieveAs(FlatsyObject object, Class<T> tClass);
 
-    public void update(FlatsyObject object, FlatsyUpdate update);
+    public void update(FlatsyObject object, FlatsyWorker update);
 
     public void delete(FlatsyObject object);
 

@@ -6,6 +6,8 @@ import com.github.thomasridd.flatsy.query.FlatsyQueryType;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -32,6 +34,19 @@ public class FlatsyObject implements Comparable {
     }
     public FlatsyCursor query(String flatsyQuery) {
         return new FlatsyCursor(this, new FlatsyQuery(flatsyQuery));
+    }
+
+    public String retrieve() throws IOException {
+        return db.retrieve(this);
+    }
+    public InputStream retrieveStream() throws IOException {
+        return db.retrieveStream(this);
+    }
+    public void create(String content) {
+        db.create(this, content);
+    }
+    public void create(InputStream stream) throws IOException {
+        db.create(this, stream);
     }
 
     public List<FlatsyObject> children() {

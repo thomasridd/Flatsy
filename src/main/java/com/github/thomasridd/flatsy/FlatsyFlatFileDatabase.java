@@ -1,13 +1,12 @@
 package com.github.thomasridd.flatsy;
 
-import com.github.thomasridd.flatsy.update.FlatsyUpdate;
+import com.github.thomasridd.flatsy.operations.FlatsyWorker;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -75,7 +74,7 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
     }
 
     @Override
-    public void update(FlatsyObject object, FlatsyUpdate update) {
+    public void update(FlatsyObject object, FlatsyWorker update) {
 
     }
 

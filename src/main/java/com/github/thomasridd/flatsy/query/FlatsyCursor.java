@@ -1,7 +1,8 @@
 package com.github.thomasridd.flatsy.query;
 
 import com.github.thomasridd.flatsy.FlatsyObject;
-import com.github.thomasridd.flatsy.FlatsyObjectType;
+import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
+import com.github.thomasridd.flatsy.operations.FlatsyWorker;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
 
@@ -33,6 +34,11 @@ public class FlatsyCursor {
         nodes.add(asList);
         treePosition.add(-1);
         this.query = null;
+    }
+
+    public void apply(FlatsyOperator operation) {
+        FlatsyWorker worker = new FlatsyWorker(operation);
+        worker.updateAll(this);
     }
 
     public FlatsyObject currentObject() {

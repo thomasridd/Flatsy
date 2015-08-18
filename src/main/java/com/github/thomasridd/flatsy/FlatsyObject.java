@@ -2,8 +2,9 @@ package com.github.thomasridd.flatsy;
 
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
 import com.github.thomasridd.flatsy.query.FlatsyQuery;
-import com.github.thomasridd.flatsy.query.FlatsyQueryInterpreter;
-import com.github.thomasridd.flatsy.update.FlatsyUpdate;
+import com.github.thomasridd.flatsy.query.FlatsyQueryType;
+import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
+import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
 
 import java.util.List;
 
@@ -23,11 +24,14 @@ public class FlatsyObject implements Comparable {
         return db.type(this.uri);
     }
 
-    public FlatsyCursor query(FlatsyQuery flatsyQuery) {
-        return new FlatsyCursor(this, flatsyQuery);
+    public FlatsyCursor query(FlatsyMatcher flatsyMatcher) {
+        return new FlatsyCursor(this, new FlatsyQuery(flatsyMatcher));
+    }
+    public FlatsyCursor query(FlatsyQueryType type, FlatsyMatcher flatsyMatcher) {
+        return new FlatsyCursor(this, new FlatsyQuery(type, flatsyMatcher));
     }
     public FlatsyCursor query(String flatsyQuery) {
-        return query(FlatsyQueryInterpreter.queryStringToFlatsyQuery(flatsyQuery));
+        return new FlatsyCursor(this, new FlatsyQuery(flatsyQuery));
     }
 
     public List<FlatsyObject> children() {

@@ -4,6 +4,7 @@ import com.github.thomasridd.flatsy.Builder;
 import com.github.thomasridd.flatsy.FlatsyDatabase;
 import com.github.thomasridd.flatsy.FlatsyFlatFileDatabase;
 import com.github.thomasridd.flatsy.FlatsyObject;
+import com.github.thomasridd.flatsy.query.matchers.*;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class FlatsyCursorTest {
         // Given
         // a database system and a simple query
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
-        FlatsyQuery query = new FlatsyQueryUriStartsWith("Beta");
+        FlatsyQuery query = new FlatsyQuery(new UriStartsWith("Beta"));
 
         // When
         // we create a cursor
@@ -46,7 +47,7 @@ public class FlatsyCursorTest {
         // Given
         // a database system and a simple query (that should bring results)
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
-        FlatsyQuery query = new FlatsyQueryUriStartsWith("Beta");
+        FlatsyQuery query = new FlatsyQuery(new UriStartsWith("Beta"));
 
         // When
         // we create a cursor
@@ -63,7 +64,7 @@ public class FlatsyCursorTest {
         // Given
         // a database system and a simple query (that should bring results)
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
-        FlatsyQuery query = new FlatsyQueryUriStartsWith("No Results");
+        FlatsyQuery query = new FlatsyQuery(new UriStartsWith("No results"));
 
         // When
         // we create a cursor
@@ -80,7 +81,7 @@ public class FlatsyCursorTest {
         // Given
         // a database system and a simple query (that should bring results)
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
-        FlatsyQuery query = new FlatsyQueryUriStartsWith("Beta");
+        FlatsyQuery query = new FlatsyQuery(new UriStartsWith("Beta"));
 
         // When
         // we create a cursor
@@ -104,7 +105,7 @@ public class FlatsyCursorTest {
         // a database system and a simple query (that should bring results)
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
         db.create(new FlatsyObject("test/data/data/data.razzle", db), "test item");
-        FlatsyQuery query = new FlatsyQueryUriEndsWith(".razzle");
+        FlatsyQuery query = new FlatsyQuery(new UriEndsWith("razzle"));
 
         // When
         // we create a cursor
@@ -123,7 +124,7 @@ public class FlatsyCursorTest {
         // a database system with a couple of bonus items
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
         db.create(new FlatsyObject("test/one/data.json", db), "test item");
-        FlatsyQuery query = new FlatsyQueryUriContains("one");
+        FlatsyQuery query = new FlatsyQuery(new UriContains("one"));
 
         // When
         // we create a cursor
@@ -145,7 +146,7 @@ public class FlatsyCursorTest {
         // Given
         // a database system and a simple query (that should bring results)
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
-        FlatsyQuery query = new FlatsyQueryIsFile();
+        FlatsyQuery query = new FlatsyQuery(new IsFile());
 
         // When
         // we create a cursor
@@ -169,7 +170,7 @@ public class FlatsyCursorTest {
         // Given
         // a database system and a simple query (that should bring results)
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
-        FlatsyQuery query = new FlatsyQueryIsFolder();
+        FlatsyQuery query = new FlatsyQuery(new IsFolder());
 
         // When
         // we create a cursor
@@ -187,13 +188,12 @@ public class FlatsyCursorTest {
     }
 
     @Test
-    public void blacklistQuery_givenDatabase_shouldNotStopOnBlacklistedNodes() {
+    public void blockerQuery_givenDatabase_shouldNotStopOnBlacklistedNodes() {
         // Given
         // a database system with a couple of bonus items
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
         db.create(new FlatsyObject("test/alpha/data.json", db), "test item");
-        FlatsyQuery query = new FlatsyQueryUriContains("alpha");
-        query.setBlackLister(true);
+        FlatsyQuery query = new FlatsyQuery(FlatsyQueryType.Blocker, new UriContains("alpha"));
 
         // When
         // we create a cursor
@@ -215,13 +215,11 @@ public class FlatsyCursorTest {
     }
 
     @Test
-    public void stopOnMatchQuery_givenDatabase_shouldGiveMinimalNodes() {
+    public void haltQuery_givenDatabase_shouldGiveMinimalNodes() {
         // Given
         // a database system with a couple of bonus items
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
-        db.create(new FlatsyObject("test/alpha/data.json", db), "test item");
-        FlatsyQuery query = new FlatsyQueryUriContains("alpha");
-        query.setStopOnMatch(true);
+        FlatsyQuery query = new FlatsyQuery(FlatsyQueryType.ConditionBlocker, new UriContains("alpha"));
 
         // When
         // we create a cursor
@@ -230,51 +228,32 @@ public class FlatsyCursorTest {
         // Then
         // we expect something non null
         assertTrue(cursor.next());
+        assertEquals("", cursor.currentObject().uri);
+        assertTrue(cursor.next());
         assertEquals("alpha", cursor.currentObject().uri);
         assertTrue(cursor.next());
-        assertEquals("test/alpha", cursor.currentObject().uri);
-        assertFalse(cursor.next());
-    }
-
-    @Test
-    public void chainedQuery_givenDatabase_shouldBringBackDoubleFilteredResults() {
-        // Given
-        // a database system and a simple query (that should bring results)
-        FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
-        db.create(new FlatsyObject("beta/test/four.json", db), "test content");
-
-        FlatsyQuery query = new FlatsyQueryUriStartsWith("Beta");
-        FlatsyQuery query2 = new FlatsyQueryUriContains("four");
-
-        query.setSubQuery(query2);
-
-        // When
-        // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject(), query);
-
-        // Then
-        // we expect only the files
-        cursor.next();
+        assertEquals("beta", cursor.currentObject().uri);
+        assertTrue(cursor.next());
         assertEquals("beta/four.json", cursor.currentObject().uri);
         assertTrue(cursor.next());
-        assertEquals("beta/test/four.json", cursor.currentObject().uri);
+        assertEquals("beta/three.json", cursor.currentObject().uri);
         assertFalse(cursor.next());
-
     }
 
     @Test
-    public void chainedQuery_createdWithChainedSyntax_shouldBringBackDoubleFilteredResults() {
+    public void multipleQuery_givenDatabase_shouldBringBackDoubleFilteredResults() {
         // Given
         // a database system and a simple query (that should bring results)
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
         db.create(new FlatsyObject("beta/test/four.json", db), "test content");
 
-        FlatsyQuery query = new FlatsyQueryUriStartsWith("Beta");
-        FlatsyQuery query2 = new FlatsyQueryUriContains("four");
+        FlatsyMatcher startsWith = new UriStartsWith("Beta");
+        FlatsyMatcher contains = new UriContains("four");
+
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject()).query(query).query(query2);
+        FlatsyCursor cursor = db.rootObject().query(startsWith).query(contains);
 
         // Then
         // we expect only the files
@@ -294,7 +273,7 @@ public class FlatsyCursorTest {
         db.create(new FlatsyObject("alpha/contains_word.json", db), "I contain the word camel");
         db.create(new FlatsyObject("test/contains_word.json", db), "My camel is called Louise");
 
-        FlatsyQuery query = new FlatsyQueryContentContains("camel");
+        FlatsyQuery query = new FlatsyQuery(new ContentContains("camel"));
 
         // When
         // we create a cursor

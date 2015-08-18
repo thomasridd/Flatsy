@@ -2,6 +2,8 @@ package com.github.thomasridd.flatsy.query;
 
 import com.github.thomasridd.flatsy.FlatsyObject;
 import com.github.thomasridd.flatsy.FlatsyObjectType;
+import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
+import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,6 @@ import java.util.List;
  */
 public class FlatsyCursor {
     FlatsyQuery query = null;
-    FlatsyCursor subCursor = null;
 
 
     int depth = 0; // these should probably be optimised
@@ -35,10 +36,10 @@ public class FlatsyCursor {
     }
 
     public FlatsyObject currentObject() {
-        if (subCursor != null) {
-            return subCursor.currentObject();
-        } else {
+        try {
             return nodes.get(depth).get(treePosition.get(depth));
+        } catch (IndexOutOfBoundsException e) {
+            return null;
         }
     }
 
@@ -55,84 +56,79 @@ public class FlatsyCursor {
     boolean onNextStepMoveDownTree = false;
 
     boolean takeStep() {
-        // Option 1. We are currently working through a subquery
-        if (subCursor != null) {
-            if (subCursor.next()) {
-                return true;
-            } else {
-                subCursor = null;
-            }
-        }
 
         if (onNextStepMoveDownTree) {
-            FlatsyObject current = nodes.get(depth).get(treePosition.get(depth));
-            tree.add(current);
-            nodes.add(current.children());
-            treePosition.add(-1);
-            depth += 1;
+            stepDownTree();
             onNextStepMoveDownTree = false;
         }
 
         // Option 2. We are walking our own tree
+
+        // Option i) We have exhausted this node on the tree
         if (!(treePosition.get(depth) < nodes.get(depth).size() - 1)) {
-            // Option i) We have exhausted this node on the tree - step back
-            treePosition.remove(treePosition.size() - 1);
-            nodes.remove(nodes.size() - 1);
-            tree.remove(tree.size() - 1);
-            depth -=1;
+            // Step back up the tree
+            stepUpTree();
             return false; // this step has just been to move on the file tree
         } else {
-            // Option ii) Stay at this depth
-            // move one step on
+        // Option ii) Stay at this depth
             treePosition.set(depth, treePosition.get(depth) + 1); // Advance on this node
-
+            // Now deal with the new node
             FlatsyObject current = nodes.get(depth).get(treePosition.get(depth));
 
-            if(this.query.blacklister == true) {
+            FlatsyQueryResult result = query.checkNode(current);
 
-                if (this.query.matchesObject(current)) {
-                    return false;
-                } else {
-                    // this node is good
-                    if (this.query.getSubQuery() == null) {
-                        onNextStepMoveDownTree = (current.getType() == FlatsyObjectType.Folder); // If this isn't the end drop down the file tree
-                        return true; // Found a result! A final result! Tell the world true
-                    } else {
-                        this.subCursor = new FlatsyCursor(current, this.query.getSubQuery());
-                        return false; // the file walk now steps to the next query level
-                    }
-                }
+            if (result == FlatsyQueryResult.Blocked) {
+                return false;
+            } else if( result == FlatsyQueryResult.MatchThenBlock) {
+                onNextStepMoveDownTree = false;
+                return true;
+            } else if( result == FlatsyQueryResult.Match) {
+                onNextStepMoveDownTree = true;
+                return true;
             } else {
-
-                if (this.query.matchesObject(current)) {
-                    // this node is good
-                    if (this.query.getSubQuery() == null) {
-                        onNextStepMoveDownTree = (!this.query.getStopOnMatch() && current.getType() == FlatsyObjectType.Folder); // If this isn't the end drop down the file tree
-                        return true; // Found a result! A final result! Tell the world true
-                    } else {
-                        this.subCursor = new FlatsyCursor(current, this.query.getSubQuery());
-                        return false; // the file walk now steps to the next query level
-                    }
-                } else {
-                    // this node just hasn't been matched
-                    onNextStepMoveDownTree = current.getType() == FlatsyObjectType.Folder;
-                    return false;
-                }
+                onNextStepMoveDownTree = true;
+                return false;
             }
-
         }
     }
 
-    public FlatsyCursor query(FlatsyQuery newQuery) {
+    private void stepUpTree() {
+        treePosition.remove(treePosition.size() - 1);
+        nodes.remove(nodes.size() - 1);
+        tree.remove(tree.size() - 1);
+        depth -=1;
+    }
+    private void stepDownTree() {
+        FlatsyObject current = nodes.get(depth).get(treePosition.get(depth));
+        tree.add(current);
+        nodes.add(current.children());
+        treePosition.add(-1);
+        depth += 1;
+    }
+    public FlatsyCursor query(FlatsyQueryType type, FlatsyMatcher matcher) {
         if (this.query == null) {
-            this.query = newQuery;
+            this.query = new FlatsyQuery().query(type, matcher);
         } else {
-            this.query.query(newQuery);
+            this.query.query(type, matcher);
         }
         return this;
     }
 
+    public FlatsyCursor query(FlatsyMatcher matcher) {
+        return query(FlatsyQueryType.Condition, matcher);
+    }
+
     public FlatsyCursor query(String queryString) {
-        return query(FlatsyQueryInterpreter.queryStringToFlatsyQuery(queryString));
+        String cleanedString = queryString.toLowerCase();
+
+        if (cleanedString.startsWith("block:")) {
+            cleanedString = cleanedString.substring("block:".length());
+            return query(FlatsyQueryType.Blocker, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
+        } else if (cleanedString.startsWith("stop:")) {
+            cleanedString = cleanedString.substring("stop:".length());
+            return query(FlatsyQueryType.ConditionBlocker, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
+        } else {
+            return query(FlatsyQueryType.Condition, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
+        }
     }
 }

@@ -19,14 +19,14 @@ public class TestSituations {
         //FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/master"));
         FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/Tom.Ridd/Documents/onswebsite/zebedee/master"));
 
-        FlatsyCursor cursor = db.rootObject().query("blacklist:{uri_contains:timeseries}").query("{uri_ends:data.json}");
+        FlatsyCursor cursor = db.rootObject().query("block:{uri_contains:timeseries}").query("{uri_ends:data.json}").query("{content_contains:employmentandlabourmarket/peopleinwork/employmentandemployeetypes/datasets/uklabourmarketjune2015referencetables/data.json}");
 
         int counter = 0;
 
         while(cursor.next() && counter < 1000000) {
-            if (counter % 10000 == 0) {
+            //if (counter % 10000 == 0) {
                 System.out.println(cursor.currentObject().uri);
-            }
+            //}
             counter++;
         }
 

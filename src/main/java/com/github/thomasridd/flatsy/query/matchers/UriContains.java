@@ -1,19 +1,20 @@
-package com.github.thomasridd.flatsy.query;
+package com.github.thomasridd.flatsy.query.matchers;
 
 import com.github.thomasridd.flatsy.FlatsyObject;
+import com.github.thomasridd.flatsy.query.FlatsyQuery;
 
 /**
  * Created by Tom.Ridd on 15/08/15.
  */
-public class FlatsyQueryUriContains extends FlatsyQuery {
+public class UriContains implements FlatsyMatcher {
     String contains = null;
 
-    public FlatsyQueryUriContains(String contains) {
+    public UriContains(String contains) {
         this.contains = contains.toLowerCase();
     }
 
     @Override
-    public boolean matchesObject(FlatsyObject object) {
+    public boolean matches(FlatsyObject object) {
         return object.uri.toLowerCase().contains(this.contains);
     }
 

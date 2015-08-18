@@ -4,6 +4,8 @@ import com.github.thomasridd.flatsy.Builder;
 import com.github.thomasridd.flatsy.FlatsyDatabase;
 import com.github.thomasridd.flatsy.FlatsyFlatFileDatabase;
 import com.github.thomasridd.flatsy.FlatsyObject;
+import com.github.thomasridd.flatsy.query.matchers.UriContains;
+import com.github.thomasridd.flatsy.query.matchers.UriStartsWith;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -13,7 +15,7 @@ import java.nio.file.Path;
 
 import static org.junit.Assert.*;
 
-public class FlatsyQueryInterpreterTest {
+public class FlatsyMatcherBuilderTest {
     Path root = null;
 
     @Before
@@ -136,12 +138,10 @@ public class FlatsyQueryInterpreterTest {
         // a database system with a couple of bonus items
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
         db.create(new FlatsyObject("test/alpha/data.json", db), "test item");
-        FlatsyQuery query = new FlatsyQueryUriContains("alpha");
-        query.setBlackLister(true);
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject()).query("block:{uri_contains:alpha}");
+        FlatsyCursor cursor = db.rootObject().query("block:{uri_contains:alpha}");
 
         // Then
         // we expect something non null
@@ -177,20 +177,16 @@ public class FlatsyQueryInterpreterTest {
     }
 
     @Test
-    public void chainedQuery_createdWithInterpreter_shouldBringBackDoubleFilteredResults() {
+    public void multipleQuery_createdWithInterpreter_shouldBringBackDoubleFilteredResults() {
         // Given
         // a database system and a simple query (that should bring results)
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
         db.create(new FlatsyObject("beta/test/four.json", db), "test content");
 
-        FlatsyQuery query = new FlatsyQueryUriStartsWith("Beta");
-        FlatsyQuery query2 = new FlatsyQueryUriContains("four");
-
-        query.setSubQuery(query2);
 
         // When
         // we create a cursor
-        FlatsyCursor cursor = new FlatsyCursor(db.rootObject()).query("block:{uri_starts:Beta}").query("{uri_contains:four}");
+        FlatsyCursor cursor = db.rootObject().query("block:{uri_starts:Beta}").query("{uri_contains:four}");
 
         // Then
         // we expect only the files

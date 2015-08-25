@@ -24,7 +24,11 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
 
     @Override
     public FlatsyObject root() {
-        return new FlatsyObject("", this);
+        return get("");
+    }
+    @Override
+    public FlatsyObject get(String uri) {
+        return new FlatsyObject(uri, this);
     }
 
     @Override

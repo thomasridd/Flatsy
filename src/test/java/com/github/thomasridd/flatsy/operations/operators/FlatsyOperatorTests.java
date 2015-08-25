@@ -8,9 +8,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
@@ -99,4 +102,26 @@ public class FlatsyOperatorTests {
         assertEquals(object2.retrieve(), clone2.retrieve());
 
     }
+
+    @Test
+         public void uriToOutputOperator_forQuery_shouldListObjects() throws IOException {
+        // Given
+        // a database with a text file
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
+
+        // When
+        // we run migrate to a second database
+        String results = null;
+        try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            db.root().apply(new UriToOutput(stream));
+            results = new String(stream.toByteArray(), "UTF8");
+        }
+
+
+        // Then
+        // we expect the fi in the new database
+        assertTrue(results.startsWith("\nalpha\nalpha/one.json\nalpha/two.json"));
+    }
+
+
 }

@@ -39,7 +39,7 @@ public class FlatsyJSONPathTest {
 
         // When
         // we create a cursor
-        FlatsyMatcher jsonPath = new JSONPathEquals("$.description.contact.name","Bhavik Patel");
+        FlatsyMatcher jsonPath = new JSONPathEquals("$.description.contact.name","Richard Clegg");
         FlatsyCursor cursor = db.root().query("block:{uri_contains:timeseries}").query("{uri_ends:data.json}").query(jsonPath);
 
         // Then
@@ -57,7 +57,7 @@ public class FlatsyJSONPathTest {
 
         // When
         // we create a cursor
-        FlatsyMatcher jsonPath = new JSONPathReturnsOne("$.description.keywords[?(@ == gdp)]");
+        FlatsyMatcher jsonPath = new JSONPathReturnsOne("$.description.keywords[?(@ == economy)]");
         FlatsyCursor cursor = db.root().query("block:{uri_contains:timeseries}").query("{uri_ends:data.json}").query(jsonPath);
 
         // Then

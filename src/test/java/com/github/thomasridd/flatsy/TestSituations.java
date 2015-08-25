@@ -1,10 +1,18 @@
 package com.github.thomasridd.flatsy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.github.thomasridd.flatsy.operations.operators.JSONPathsToOutput;
 import com.github.thomasridd.flatsy.operations.operators.Migrate;
+import com.github.thomasridd.flatsy.operations.operators.UriToOutput;
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by thomasridd on 17/08/15.
@@ -75,5 +83,32 @@ public class TestSituations {
 
         System.out.println("Migrated in " + (System.currentTimeMillis() - start) + " milliseconds");
 
+    }
+
+    @Test
+    public void jsonPathsToOutputOperator_forQuery_shouldListObjects() throws IOException {
+        // Given
+        // a database with a text file
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/backup/content_live/zebedee/master"));
+
+        // When
+        // we run migrate to a second database
+        String results = null;
+        List<String> paths = new ArrayList<>();
+        paths.add("$.uri");
+        paths.add("$.description.title");
+        paths.add("$.description.edition");
+        paths.add("$.description.contact.name");
+        paths.add("$.type");
+
+        try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            db.root().query("block:{uri_contains:timeseries}").query("{is_file}").query("{uri_ends:data.json}").apply(new JSONPathsToOutput(stream, paths));
+            results = new String(stream.toByteArray(), "UTF8");
+        }
+
+
+        // Then
+        // we expect the fi in the new database
+        System.out.println(results);
     }
 }

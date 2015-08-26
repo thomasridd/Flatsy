@@ -1,10 +1,11 @@
 package com.github.thomasridd.flatsy;
 
+import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
 import com.github.thomasridd.flatsy.query.FlatsyQuery;
 import com.github.thomasridd.flatsy.query.FlatsyQueryType;
+import com.github.thomasridd.flatsy.query.matchers.All;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
-import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +35,14 @@ public class FlatsyObject implements Comparable {
     }
     public FlatsyCursor query(String flatsyQuery) {
         return new FlatsyCursor(this, new FlatsyQuery(flatsyQuery));
+    }
+
+    public FlatsyCursor cursor() {
+        return new FlatsyCursor(this, new FlatsyQuery(new All()));
+    }
+
+    public void apply(FlatsyOperator operator) {
+        this.cursor().apply(operator);
     }
 
     public String retrieve() throws IOException {

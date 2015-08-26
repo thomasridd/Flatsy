@@ -1,5 +1,6 @@
 package com.github.thomasridd.flatsy;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -12,25 +13,26 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
 public class FlatsyFlatFileDatabaseTest {
 Path root = null;
+    Path simple = null;
 
     @Before
     public void setUp() throws Exception {
         // For all tests we copy the flatFileTest example dataset
 
         root = Builder.copyFlatFiles();
+        simple = Builder.cursorTestDatabase();
     }
 
     @After
     public void tearDown() throws Exception {
         // Garbage collection (try to avoid choking the file system)
-
+        FileUtils.deleteDirectory(simple.toFile());
         FileUtils.deleteDirectory(root.toFile());
     }
 
@@ -299,5 +301,150 @@ Path root = null;
         assertEquals(2, flatsyObjects.size());
         assertEquals("test/file.json", flatsyObjects.get(0).uri);
         assertEquals("test/folder", flatsyObjects.get(1).uri);
+    }
+
+    @Test
+    public void moveFilename_forExactFile_shouldGiveStringRename() {
+        // Given
+        // A simple file object
+        FlatsyFlatFileDatabase db = new FlatsyFlatFileDatabase(root);
+        FlatsyObject file = new FlatsyObject("test/test.json", db);
+
+        // When
+        // We rename the file itself using the files name as base
+        String renamed = db.moveFilename(file, file.uri, "renamed/test.json");
+
+        // Then
+        // We expect the file to be renamed
+        assertEquals("renamed/test.json", renamed);
+    }
+
+    @Test
+    public void moveFilename_forSubFile_shouldGiveStringRename() {
+        // Given
+        // A simple file object
+        FlatsyFlatFileDatabase db = new FlatsyFlatFileDatabase(root);
+        FlatsyObject file = new FlatsyObject("sliced/red/tomatoes/test.json", db);
+        String renameFrom = "sliced/red";
+        String renameTo = "fried/green";
+
+        // When
+        // We rename the file itself using the files name as base
+        String renamed = db.moveFilename(file, renameFrom, renameTo);
+
+        // Then
+        // We expect the file to be renamed
+        assertEquals("fried/green/tomatoes/test.json", renamed);
+    }
+
+    @Test
+    public void moveMap_forSimpleDatabase_shouldRenameFiles() {
+        // Given
+        // A simple database object
+        FlatsyFlatFileDatabase db = new FlatsyFlatFileDatabase(simple);
+        db.create(new FlatsyObject("fried/bread/data.json", db), "bread");
+        db.create(new FlatsyObject("fried/sausages/data.json", db), "sausage");
+        db.create(new FlatsyObject("fried/bacon/data.json", db), "bacon");
+
+        // When
+        // We create a file map using our known database
+        FlatsyObject object = new FlatsyObject("fried", db);
+        Map<String, String> renameMap = db.moveMap(object, "grilled");
+
+        // Then
+        // We expect the three files to be mapped
+        assertEquals("grilled/bread/data.json", renameMap.get("fried/bread/data.json"));
+        assertEquals("grilled/sausages/data.json", renameMap.get("fried/sausages/data.json"));
+        assertEquals("grilled/bacon/data.json", renameMap.get("fried/bacon/data.json"));
+    }
+
+    @Test
+    public void moveMap_forSimpleDatabase_shouldRenameFolder() {
+        // Given
+        // A simple database object
+        FlatsyFlatFileDatabase db = new FlatsyFlatFileDatabase(simple);
+        db.create(new FlatsyObject("fried/bread/data.json", db), "bread");
+        db.create(new FlatsyObject("fried/sausages/data.json", db), "sausage");
+        db.create(new FlatsyObject("fried/bacon/data.json", db), "bacon");
+
+        // When
+        // We create a file map using our known database
+        FlatsyObject object = new FlatsyObject("fried", db);
+        Map<String, String> renameMap = db.moveMap(object, "grilled");
+
+        // Then
+        // We expect the three files to be mapped
+        assertEquals("grilled", renameMap.get("fried"));
+        assertEquals("grilled/bread", renameMap.get("fried/bread"));
+        assertEquals("grilled/sausages", renameMap.get("fried/sausages"));
+        assertEquals("grilled/bacon", renameMap.get("fried/bacon"));
+    }
+
+    @Test
+    public void moveMap_forSimpleDatabase_shouldRenameSpecificFilesAndFolders() {
+        // Given
+        // A simple database object
+        FlatsyFlatFileDatabase db = new FlatsyFlatFileDatabase(simple);
+        db.create(new FlatsyObject("fried/bread/data.json", db), "bread");
+        db.create(new FlatsyObject("fried/sausages/data.json", db), "sausage");
+        db.create(new FlatsyObject("fried/bacon/data.json", db), "bacon");
+        db.create(new FlatsyObject("scrambled/eggs/data.json", db), "eggs");
+
+        // When
+        // We create a file map using our known database
+        FlatsyObject object = new FlatsyObject("fried", db);
+        Map<String, String> renameMap = db.moveMap(object, "grilled");
+
+        // Then
+        // We expect the three files and four folders to be mapped and no others
+        assertEquals(7, renameMap.size());
+    }
+
+    @Test
+    public void move_forSimpleDatabase_shouldCreateNewFiles() {
+        // Given
+        // A simple database object
+        FlatsyFlatFileDatabase db = new FlatsyFlatFileDatabase(simple);
+        db.create(new FlatsyObject("fried/bread/data.json", db), "bread");
+        db.create(new FlatsyObject("fried/sausages/data.json", db), "sausage");
+        db.create(new FlatsyObject("fried/bacon/data.json", db), "bacon");
+        db.create(new FlatsyObject("scrambled/eggs/data.json", db), "eggs");
+
+        FlatsyObject object = new FlatsyObject("fried", db);
+
+        // When
+        // We move files
+        Map<String, String> renameMap = db.moveMap(object, "grilled"); // make a note of current structure
+        db.move(object, "grilled"); // make the move
+
+        // Then
+        // We expect the new files to exist
+        for (String key : renameMap.keySet()) {
+            assertNotEquals(FlatsyObjectType.Null, db.get(renameMap.get(key)).getType());
+        }
+    }
+
+    @Test
+    public void move_forSimpleDatabase_shouldRemoveOldNode() {
+        // Given
+        // A simple database object
+        FlatsyFlatFileDatabase db = new FlatsyFlatFileDatabase(simple);
+        db.create(new FlatsyObject("fried/bread/data.json", db), "bread");
+        db.create(new FlatsyObject("fried/sausages/data.json", db), "sausage");
+        db.create(new FlatsyObject("fried/bacon/data.json", db), "bacon");
+        db.create(new FlatsyObject("scrambled/eggs/data.json", db), "eggs");
+
+        FlatsyObject object = new FlatsyObject("fried", db);
+
+        // When
+        // We move files
+        Map<String, String> renameMap = db.moveMap(object, "grilled"); // make a note of current structure
+        db.move(object, "grilled"); // make the move
+
+        // Then
+        // We expect the old files to not exist (at least in this scenario)
+        for (String key : renameMap.keySet()) {
+            assertEquals(FlatsyObjectType.Null, db.get(key).getType());
+        }
     }
 }

@@ -1,15 +1,23 @@
 package com.github.thomasridd.flatsy;
 
-import com.github.thomasridd.flatsy.operations.FlatsyWorker;
+import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
+import com.github.thomasridd.flatsy.operations.operators.UriToMap;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Created by Tom.Ridd on 15/08/15.
@@ -78,8 +86,8 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
     }
 
     @Override
-    public void update(FlatsyObject object, FlatsyWorker update) {
-
+    public void update(FlatsyObject object, FlatsyOperator update) {
+        object.apply(update);
     }
 
     @Override
@@ -103,6 +111,72 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
             }
         } catch (IOException ex) {}
         return objects;
+    }
+
+    /**
+     * Update an object uri and all child objects
+     *
+     * @param object
+     * @param newUri
+     */
+    @Override
+    public void move(FlatsyObject object, String newUri) {
+        // File system kicks in for a straight path move
+        Path oldPath = root.resolve(object.uri);
+        Path newPath = root.resolve(newUri);
+        try {
+            if (object.getType() == FlatsyObjectType.Folder) {
+
+                FileUtils.moveDirectory(oldPath.toFile(), newPath.toFile());
+
+            } else if (object.getType() == FlatsyObjectType.JSONFile || object.getType() == FlatsyObjectType.OtherFile) {
+
+                FileUtils.moveFile(oldPath.toFile(), newPath.toFile());
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return;
+    }
+
+    /**
+     * Get the mapping that would move an object and all subfiles to a new uri
+     *
+     * @param object an object that is going to be moved
+     * @param newUri the uri it will be moved to
+     * @return A map of form moveMap.get(oldUri) = newUri
+     */
+    Map<String, String> moveMap(FlatsyObject object, String newUri) {
+
+        ConcurrentMap<String, String> map = new ConcurrentHashMap<>();
+
+        object.apply(new UriToMap(map, newUri));
+
+        for (String key : map.keySet()) {
+            String newFilename = moveFilename(new FlatsyObject(key, object.db), object.uri, newUri);
+            map.put(key, newFilename);
+        }
+
+        return map;
+    }
+
+    /**
+     * Get the filename that objectToMove will need when moved as part of the
+     * operation oldUri -> newUri
+     * <p/>
+     * oldUri must be a parent path of the object
+     *
+     * @param objectToMove a subobject to be moved
+     * @param oldUri       the 'from' uri
+     * @param newUri       the 'to' uri
+     * @return
+     */
+    String moveFilename(FlatsyObject objectToMove, String oldUri, String newUri) {
+        if (!objectToMove.uri.startsWith(oldUri)) {
+            return objectToMove.uri;
+        }
+        return newUri + objectToMove.uri.substring(oldUri.length());
     }
 
     @Override

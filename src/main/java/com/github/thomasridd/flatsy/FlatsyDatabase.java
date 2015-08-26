@@ -1,6 +1,6 @@
 package com.github.thomasridd.flatsy;
 
-import com.github.thomasridd.flatsy.operations.FlatsyWorker;
+import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,10 +16,13 @@ import java.util.List;
  * Flatsy
  */
 public interface FlatsyDatabase {
-    public FlatsyObject root();
+    FlatsyObject root();
 
-    public void create(FlatsyObject object, String content);
-    public void create(FlatsyObject object, InputStream content) throws IOException;
+    FlatsyObject get(String uri);
+
+    void create(FlatsyObject object, String content);
+
+    void create(FlatsyObject object, InputStream content) throws IOException;
 
     /**
      * Retrieves the string contents for the FlatsyObject database object
@@ -28,7 +31,7 @@ public interface FlatsyDatabase {
      * @param object a FlatsyObject with valid URI
      * @return
      */
-    public String retrieve(FlatsyObject object) throws IOException;
+    String retrieve(FlatsyObject object) throws IOException;
 
     /**
      * Writes the content of the object to an OutputStream.
@@ -37,13 +40,13 @@ public interface FlatsyDatabase {
      * @param object a FlatsyObject with valid URI
      * @return an inputstream of the content
      */
-    public InputStream retrieveStream(FlatsyObject object) throws IOException;
+    InputStream retrieveStream(FlatsyObject object) throws IOException;
 
-    public <T> Object retrieveAs(FlatsyObject object, Class<T> tClass);
+    <T> Object retrieveAs(FlatsyObject object, Class<T> tClass);
 
-    public void update(FlatsyObject object, FlatsyWorker update);
+    void update(FlatsyObject object, FlatsyOperator update);
 
-    public void delete(FlatsyObject object);
+    void delete(FlatsyObject object);
 
     /**
      * Gets a list of objects that belong to a specified parent node
@@ -53,9 +56,10 @@ public interface FlatsyDatabase {
      * @param object giving the base uri
      * @return
      */
-    public List<FlatsyObject> children(FlatsyObject object);
+    List<FlatsyObject> children(FlatsyObject object);
 
 
+    void move(FlatsyObject object, String newUri);
 
-    public FlatsyObjectType type(String uri);
+    FlatsyObjectType type(String uri);
 }

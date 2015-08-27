@@ -126,13 +126,17 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
         Path newPath = root.resolve(newUri);
         try {
             if (object.getType() == FlatsyObjectType.Folder) {
-
-                FileUtils.moveDirectory(oldPath.toFile(), newPath.toFile());
-
+                if (Files.exists(newPath)) {
+                    for (FlatsyObject child : object.children()) {
+                        String newChildUri = moveFilename(child, object.uri, newUri);
+                        move(child, newChildUri);
+                    }
+                    FileUtils.deleteDirectory(oldPath.toFile()); // delete current directory
+                } else {
+                    FileUtils.moveDirectory(oldPath.toFile(), newPath.toFile());
+                }
             } else if (object.getType() == FlatsyObjectType.JSONFile || object.getType() == FlatsyObjectType.OtherFile) {
-
                 FileUtils.moveFile(oldPath.toFile(), newPath.toFile());
-
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -147,7 +151,8 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
      * @param newUri the uri it will be moved to
      * @return A map of form moveMap.get(oldUri) = newUri
      */
-    Map<String, String> moveMap(FlatsyObject object, String newUri) {
+    @Override
+    public Map<String, String> moveMap(FlatsyObject object, String newUri) {
 
         ConcurrentMap<String, String> map = new ConcurrentHashMap<>();
 

@@ -255,11 +255,6 @@ Path root = null;
     }
 
     @Test
-    public void update_withRenameUpdate_shouldRenameFile() {
-        //TODO
-    }
-
-    @Test
     public void delete_withExistingFile_shouldDeleteFile() {
         // Given
         // we create some content

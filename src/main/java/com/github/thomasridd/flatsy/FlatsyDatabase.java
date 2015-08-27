@@ -5,6 +5,7 @@ import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Tom.Ridd on 15/08/15.
@@ -60,6 +61,8 @@ public interface FlatsyDatabase {
 
 
     void move(FlatsyObject object, String newUri);
+
+    Map<String, String> moveMap(FlatsyObject object, String newUri);
 
     FlatsyObjectType type(String uri);
 }

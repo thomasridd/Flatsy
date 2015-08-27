@@ -38,4 +38,12 @@ public class Builder {
 
         return tempDir;
     }
+
+    public static Path emptyTestDatabase() throws IOException {
+        Path tempDir = Files.createTempDirectory("flatsyempty");
+
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(tempDir);
+
+        return tempDir;
+    }
 }

@@ -240,7 +240,7 @@ public class FlatsyMoverToolTest {
 
         // When
         // we run the move
-        mover.move(db);
+        mover.move(db, true);
 
         // Then
         // we expect the tool to remove all files from their o;d place
@@ -259,7 +259,7 @@ public class FlatsyMoverToolTest {
 
         // When
         // we run the move
-        mover.move(db);
+        mover.move(db, true);
 
         // Then
         // we expect the tool to move all files to their correct place
@@ -278,7 +278,7 @@ public class FlatsyMoverToolTest {
 
         // When
         // we run the move
-        mover.move(db);
+        mover.move(db, true);
 
         // Then
         // we expect the tool to remove all files from their o;d place
@@ -299,7 +299,7 @@ public class FlatsyMoverToolTest {
 
         // When
         // we run the move
-        mover.move(db);
+        mover.move(db, true);
 
         // Then
         // we expect the tool to move all files to their correct place

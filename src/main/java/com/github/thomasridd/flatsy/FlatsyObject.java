@@ -20,6 +20,9 @@ public class FlatsyObject implements Comparable {
 
     public FlatsyObject(String uri, FlatsyDatabase db) {
         this.uri = uri.toLowerCase();
+        if (this.uri.startsWith("/")) {
+            this.uri = this.uri.substring(1);
+        }
         this.db = db;
     }
 

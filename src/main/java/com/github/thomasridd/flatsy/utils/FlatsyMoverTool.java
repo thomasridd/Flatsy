@@ -69,9 +69,18 @@ public class FlatsyMoverTool {
                 Path subPath = root.resolve(content.uri);
                 FlatsyDatabase subDb = new FlatsyFlatFileDatabase(subPath);
 
-                mover.movesAreValid(subDb);
+                for (FromTo fromTo : mover.fromToList) {
+                    if (subDb.get(fromTo.fromUri).getType() != FlatsyObjectType.Null) {
+                        System.out.println(fromTo.fromUri + " is being edited in " + content.uri);
+                    }
+                }
 
                 Map<FromTo, List<String>> fromToListMap = mover.contentUpdateList(subDb);
+                for (FromTo fromTo : fromToListMap.keySet()) {
+                    for (String inFile : fromToListMap.get(fromTo)) {
+                        System.out.println(fromTo.fromUri + " is referenced from file " + inFile);
+                    }
+                }
             }
         }
     }
@@ -83,6 +92,7 @@ public class FlatsyMoverTool {
         Path updateFile = Paths.get("/Users/thomasridd/Documents/onswebsite/uri_updates.txt");
         FlatsyMoverTool mover = new FlatsyMoverTool(updateFile, true);
 
+//        printProblemsWithCollections();
 
         if (mover.movesAreValid(db)) {
             mover.move(db);
@@ -96,14 +106,15 @@ public class FlatsyMoverTool {
     public void move(FlatsyDatabase db, boolean updateContents) {
         Collections.sort(fromToList);
 
+        long start = System.currentTimeMillis();
         for (FromTo fromTo : fromToList) {
-            System.out.println("moving " + fromTo.fromUri + " to " + fromTo.toUri);
+            System.out.println((System.currentTimeMillis() - start) + "ms - moving " + fromTo.fromUri + " to " + fromTo.toUri);
             // make the move
             db.move(db.get(fromTo.fromUri), fromTo.toUri);
 
             // update file contents
             if (updateContents) {
-                db.root().cursor().query("{uri_contains:.json}").apply(new ReplaceIn(fromTo.fromUri, fromTo.toUri));
+                db.root().cursor().query("{uri_contains:.json}").query("{content_contains:" + fromTo.fromUri + "}").apply(new ReplaceIn(fromTo.fromUri, fromTo.toUri));
             }
         }
     }
@@ -123,10 +134,6 @@ public class FlatsyMoverTool {
             // get a map of the uris
             ConcurrentMap<String, String> urisWithReplaceMents = new ConcurrentHashMap<>();
             db.root().cursor().query("{uri_contains:.json}").query("{content_contains:" + fromTo.fromUri + "}").apply(new UriToMap(urisWithReplaceMents, fromTo.fromUri));
-
-            for (String key : urisWithReplaceMents.keySet()) {
-                System.out.println("Replacement:\t" + fromTo.fromUri + "\t in \t" + key);
-            }
 
             // add them to the list
             List<String> uris = new ArrayList<>();
@@ -152,10 +159,7 @@ public class FlatsyMoverTool {
         for (FromTo fromTo : fromToList) {
             if (db.get(fromTo.fromUri).getType() == FlatsyObjectType.Null) {
                 valid = false;
-            } else {
-                System.out.println(fromTo.fromUri + " exists in a collection and cannot be moved");
             }
-
         }
         return valid;
     }

@@ -10,6 +10,7 @@ import com.github.thomasridd.flatsy.operations.operators.JSONPathsToOutput;
 import com.github.thomasridd.flatsy.operations.operators.Migrate;
 import com.github.thomasridd.flatsy.operations.operators.UriToOutput;
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
+import com.github.thomasridd.flatsy.query.matchers.JSONPathEquals;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -24,7 +25,6 @@ public class TestSituations {
     long start = System.currentTimeMillis();
 
         FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/backup/content_live/zebedee/master"));
-        //FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/Tom.Ridd/Documents/onswebsite/zebedee/master"));
 
         FlatsyCursor cursor = db.root().query("block:{uri_contains:timeseries}").query("{uri_ends:data.json}").query("{content_contains:clegg}");
 
@@ -47,7 +47,6 @@ public class TestSituations {
         String uri = "economy/inflationandpriceindices/timeseries/d7g7";
 
         FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/backup/content_live/zebedee/master"));
-        //FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/Tom.Ridd/Documents/onswebsite/zebedee/master"));
 
         FlatsyCursor cursor = db.root()
                 .query("block:{uri_contains:timeseries}")
@@ -89,7 +88,7 @@ public class TestSituations {
     public void jsonPathsToOutputOperator_forQuery_shouldListObjects() throws IOException {
         // Given
         // a database with a text file
-        FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/backup/content_live/zebedee/master"));
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/master"));
 
         // When
         // we run migrate to a second database
@@ -110,5 +109,13 @@ public class TestSituations {
         // Then
         // we expect the fi in the new database
         System.out.println(results);
+    }
+
+    @Test
+    public void jsonMatcher_givenDatabase_canPickoutJson() {
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/master"));
+
+        JSONPathEquals matcher = new JSONPathEquals("$.description.edition", "Yes");
+        db.root().query("block:{uri_contains:timeseries}").query("{is_file}").query("{uri_ends:data.json}").query(matcher).apply(new UriToOutput(System.out));
     }
 }

@@ -55,11 +55,17 @@ public class FlatsyMoverTool {
         }
     }
 
+    /**
+     * Identify problems with updates
+     *
+     *
+     * @throws IOException
+     */
     public static void printProblemsWithCollections() throws IOException {
         Path root = Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/collections");
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
 
-        Path updateFile = Paths.get("/Users/thomasridd/Documents/onswebsite/uri_updates.txt");
+        Path updateFile = Paths.get("/Users/thomasridd/Documents/onswebsite/uri_updates_round_six.txt");
         FlatsyMoverTool mover = new FlatsyMoverTool(updateFile, true);
 
 
@@ -86,13 +92,13 @@ public class FlatsyMoverTool {
     }
 
     public static void main(String[] args) throws IOException {
-        Path root = Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/launchpad");
+        Path root = Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/master");
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
 
-        Path updateFile = Paths.get("/Users/thomasridd/Documents/onswebsite/uri_updates.txt");
+        Path updateFile = Paths.get("/Users/thomasridd/Documents/onswebsite/uri_updates_round_six.txt");
         FlatsyMoverTool mover = new FlatsyMoverTool(updateFile, true);
 
-//        printProblemsWithCollections();
+        printProblemsWithCollections();
 
         if (mover.movesAreValid(db)) {
             mover.move(db);
@@ -107,7 +113,9 @@ public class FlatsyMoverTool {
         Collections.sort(fromToList);
 
         long start = System.currentTimeMillis();
-        for (FromTo fromTo : fromToList) {
+
+        for (int i = 0; i < fromToList.size(); i++) {
+            FromTo fromTo = fromToList.get(fromToList.size() - 1 - i);
             System.out.println((System.currentTimeMillis() - start) + "ms - moving " + fromTo.fromUri + " to " + fromTo.toUri);
             // make the move
             db.move(db.get(fromTo.fromUri), fromTo.toUri);

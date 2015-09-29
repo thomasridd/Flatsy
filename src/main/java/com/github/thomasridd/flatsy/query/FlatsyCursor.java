@@ -3,6 +3,7 @@ package com.github.thomasridd.flatsy.query;
 import com.github.thomasridd.flatsy.FlatsyObject;
 import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
 import com.github.thomasridd.flatsy.operations.FlatsyWorker;
+import com.github.thomasridd.flatsy.operations.operators.FlatsyOperatorBuilder;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
 
@@ -38,6 +39,11 @@ public class FlatsyCursor {
 
     public void apply(FlatsyOperator operation) {
         FlatsyWorker worker = new FlatsyWorker(operation);
+        worker.updateAll(this);
+    }
+
+    public void apply(String operation) {
+        FlatsyWorker worker = new FlatsyWorker(FlatsyOperatorBuilder.operatorStringToOperator(operation));
         worker.updateAll(this);
     }
 

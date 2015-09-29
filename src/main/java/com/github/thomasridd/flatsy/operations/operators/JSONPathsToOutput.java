@@ -29,7 +29,7 @@ public class JSONPathsToOutput implements FlatsyOperator {
     @Override
     public void apply(FlatsyObject object) {
         try {
-            String objectString = "";
+            String objectString = object.uri + "\t";
             DocumentContext context = JsonPath.parse(object.retrieveStream());
 
             for (String path: paths) {

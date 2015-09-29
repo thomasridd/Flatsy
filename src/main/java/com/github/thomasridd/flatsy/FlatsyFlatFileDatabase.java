@@ -68,8 +68,9 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
         String content = null;
         try {
             content = new Scanner(path.toFile()).useDelimiter("//Z").next();
-        } catch (FileNotFoundException e) {
-            return null;
+        } catch (Exception e) {
+            System.out.println("Error in " + object.uri);
+            return "Error";
         }
         return content;
     }

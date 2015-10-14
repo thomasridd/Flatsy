@@ -25,7 +25,7 @@ public class JSONPathReturnsOne implements FlatsyMatcher {
         try {
             DocumentContext context = JsonPath.parse(object.retrieveStream());
             List<Object> values = context.read(this.jsonPath);
-            return values.size() == 1;
+            return values.size() >= 1;
         } catch (IOException e) {
             System.out.println("Could not assess " + object.uri + " for " + jsonPath);
             return false;

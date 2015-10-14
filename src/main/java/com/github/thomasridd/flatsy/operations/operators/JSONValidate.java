@@ -2,16 +2,8 @@ package com.github.thomasridd.flatsy.operations.operators;
 
 import com.github.thomasridd.flatsy.FlatsyObject;
 import com.google.gson.Gson;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 
 /**
  * Created by thomasridd on 18/08/15.

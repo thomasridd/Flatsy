@@ -28,6 +28,7 @@ public class Migrate implements FlatsyOperator {
     public void apply(FlatsyObject object) {
         if (object.getType() == FlatsyObjectType.Folder || object.getType() == FlatsyObjectType.Null) { return; }
 
+        db.delete(object);
         try(InputStream stream = object.retrieveStream();) {
             db.create(object, stream);
         } catch (IOException e) {

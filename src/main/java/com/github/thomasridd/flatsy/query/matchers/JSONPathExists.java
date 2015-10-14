@@ -6,7 +6,6 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by Tom.Ridd on 15/08/15.

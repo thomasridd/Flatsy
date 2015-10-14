@@ -5,9 +5,7 @@ import com.github.thomasridd.flatsy.FlatsyObjectType;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * Created by Tom.Ridd on 15/08/15.

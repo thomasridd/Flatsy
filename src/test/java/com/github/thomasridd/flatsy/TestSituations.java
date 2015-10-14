@@ -1,11 +1,5 @@
 package com.github.thomasridd.flatsy;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.thomasridd.flatsy.operations.operators.JSONPathsToOutput;
 import com.github.thomasridd.flatsy.operations.operators.Migrate;
 import com.github.thomasridd.flatsy.operations.operators.UriToOutput;
@@ -13,7 +7,11 @@ import com.github.thomasridd.flatsy.query.FlatsyCursor;
 import com.github.thomasridd.flatsy.query.matchers.JSONPathEquals;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by thomasridd on 17/08/15.

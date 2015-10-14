@@ -95,7 +95,7 @@ public class FlatsyMoverTool {
         Path root = Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/master");
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
 
-        Path updateFile = Paths.get("/Users/thomasridd/Documents/onswebsite/uri_updates_round_six.txt");
+        Path updateFile = Paths.get("/Users/thomasridd/Documents/onswebsite/uri_updates_round_seven.txt");
         FlatsyMoverTool mover = new FlatsyMoverTool(updateFile, true);
 
         printProblemsWithCollections();

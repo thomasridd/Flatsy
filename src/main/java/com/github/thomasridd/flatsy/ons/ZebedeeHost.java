@@ -10,7 +10,6 @@ import com.github.thomasridd.flatsy.ons.json.serialiser.IsoDateSerializer;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
 
 public class ZebedeeHost {
@@ -103,6 +102,11 @@ public class ZebedeeHost {
 
     public static Response<String> approve(String collectionID) throws IOException {
         Endpoint endpoint = ZebedeeHost.approve.addPathSegment(collectionID);
+        return httpPublisher.post(endpoint, null, String.class);
+    }
+
+    public static Response<String> publish(String collectionID) throws IOException {
+        Endpoint endpoint = ZebedeeHost.publish.addPathSegment(collectionID);
         return httpPublisher.post(endpoint, null, String.class);
     }
 }

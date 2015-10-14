@@ -2,10 +2,8 @@ package com.github.thomasridd.flatsy.query.matchers;
 
 import com.github.thomasridd.flatsy.FlatsyObject;
 import com.github.thomasridd.flatsy.FlatsyObjectType;
-import com.github.thomasridd.flatsy.query.FlatsyQuery;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 

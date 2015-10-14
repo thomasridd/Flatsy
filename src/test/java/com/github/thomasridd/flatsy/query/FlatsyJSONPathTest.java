@@ -3,8 +3,9 @@ package com.github.thomasridd.flatsy.query;
 import com.github.thomasridd.flatsy.Builder;
 import com.github.thomasridd.flatsy.FlatsyDatabase;
 import com.github.thomasridd.flatsy.FlatsyFlatFileDatabase;
-import com.github.thomasridd.flatsy.FlatsyObject;
-import com.github.thomasridd.flatsy.query.matchers.*;
+import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
+import com.github.thomasridd.flatsy.query.matchers.JSONPathEquals;
+import com.github.thomasridd.flatsy.query.matchers.JSONPathReturnsOne;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -12,8 +13,6 @@ import org.junit.Test;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static org.junit.Assert.*;
 
 /**
  * JSONPath Tests

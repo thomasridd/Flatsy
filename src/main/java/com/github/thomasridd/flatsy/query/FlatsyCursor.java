@@ -1,8 +1,8 @@
 package com.github.thomasridd.flatsy.query;
 
 import com.github.thomasridd.flatsy.FlatsyObject;
-import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
 import com.github.thomasridd.flatsy.operations.FlatsyWorker;
+import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
 import com.github.thomasridd.flatsy.operations.operators.FlatsyOperatorBuilder;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;

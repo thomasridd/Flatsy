@@ -4,7 +4,6 @@ import com.github.thomasridd.flatsy.FlatsyDatabase;
 import com.github.thomasridd.flatsy.FlatsyFlatFileDatabase;
 import com.github.thomasridd.flatsy.FlatsyObject;
 import com.github.thomasridd.flatsy.operations.operators.Migrate;
-import com.github.thomasridd.flatsy.operations.operators.UriToOutput;
 import com.github.thomasridd.flatsy.query.matchers.JSONPathExists;
 
 import java.nio.file.Path;

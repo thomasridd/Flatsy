@@ -1,9 +1,7 @@
 package com.github.thomasridd.flatsy.operations.operators;
 
 import com.github.davidcarboni.restolino.json.Serialiser;
-import com.github.thomasridd.flatsy.query.matchers.UriContains;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 /**

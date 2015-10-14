@@ -8,7 +8,6 @@ import com.github.thomasridd.flatsy.ons.ZebedeeHost;
 import com.github.thomasridd.flatsy.ons.json.CollectionDescription;
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

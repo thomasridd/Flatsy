@@ -10,8 +10,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import java.nio.file.Path;
+
+import static org.junit.Assert.*;
 
 public class FlatsyCursorTest {
     Path root = null;

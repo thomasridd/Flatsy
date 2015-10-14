@@ -1,7 +1,5 @@
 package com.github.thomasridd.flatsy.query.matchers;
 
-import com.github.thomasridd.flatsy.query.FlatsyQuery;
-
 /**
  * Created by Tom.Ridd on 16/08/15.
  */
@@ -40,9 +38,14 @@ public class FlatsyMatcherBuilder {
             flatsyMatcher = new ContentContains(arguments);
         } else if (queryType.equalsIgnoreCase("is_file")) {
             flatsyMatcher = new IsFile();
+        } else if (queryType.equalsIgnoreCase("all")) {
+            flatsyMatcher = new All();
         } else if (queryType.equalsIgnoreCase("is_folder")) {
             flatsyMatcher = new IsFolder();
-        } else {
+        } else if (queryType.equalsIgnoreCase("json_equals")) {
+            String[] args = arguments.split("=");
+            flatsyMatcher = new JSONPathEquals(args[0], args[1]);
+        }  else {
             return null;
         }
 

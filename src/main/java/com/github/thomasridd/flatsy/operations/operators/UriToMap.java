@@ -2,8 +2,6 @@ package com.github.thomasridd.flatsy.operations.operators;
 
 import com.github.thomasridd.flatsy.FlatsyObject;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.concurrent.ConcurrentMap;
 
 /**

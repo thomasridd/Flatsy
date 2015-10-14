@@ -6,7 +6,6 @@ import com.github.thomasridd.flatsy.http.Http;
 import com.github.thomasridd.flatsy.http.Response;
 import com.github.thomasridd.flatsy.ons.ZebedeeHost;
 import com.github.thomasridd.flatsy.ons.json.CollectionDescription;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;

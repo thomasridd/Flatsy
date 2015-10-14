@@ -4,14 +4,11 @@ import com.github.thomasridd.flatsy.FlatsyObject;
 
 import java.io.IOException;
 
-/**
- * Created by thomasridd on 18/08/15.
- */
-public class ReplaceIn implements FlatsyOperator {
+public class Replace implements FlatsyOperator {
     String original = null;
     String replacement = null;
 
-    public ReplaceIn(String original, String replacement) {
+    public Replace(String original, String replacement) {
         this.original = original;
         this.replacement = replacement;
     }

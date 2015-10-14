@@ -1,7 +1,7 @@
 package com.github.thomasridd.flatsy;
 
+import com.github.thomasridd.flatsy.operations.operators.Copy;
 import com.github.thomasridd.flatsy.operations.operators.JSONPathsToOutput;
-import com.github.thomasridd.flatsy.operations.operators.Migrate;
 import com.github.thomasridd.flatsy.operations.operators.UriToOutput;
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
 import com.github.thomasridd.flatsy.query.matchers.JSONPathEquals;
@@ -75,7 +75,7 @@ public class TestSituations {
         // Query should apply a migrate operator to every identified object
         db.root().query("{uri_contains:bulletins}")
                 .query("{uri_ends:data.json}")
-                .apply(new Migrate(db2));
+                .apply(new Copy(db2));
 
 
         System.out.println("Migrated in " + (System.currentTimeMillis() - start) + " milliseconds");

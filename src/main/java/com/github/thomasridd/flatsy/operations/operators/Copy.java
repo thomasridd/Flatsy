@@ -17,10 +17,10 @@ import java.io.InputStream;
  * Use for backup, partial backup, or
  *
  */
-public class Migrate implements FlatsyOperator {
+public class Copy implements FlatsyOperator {
     FlatsyDatabase db;
 
-    public Migrate(FlatsyDatabase db) {
+    public Copy(FlatsyDatabase db) {
         this.db = db;
     }
 
@@ -29,10 +29,10 @@ public class Migrate implements FlatsyOperator {
         if (object.getType() == FlatsyObjectType.Folder || object.getType() == FlatsyObjectType.Null) { return; }
 
         db.delete(object);
-        try(InputStream stream = object.retrieveStream();) {
+        try (InputStream stream = object.retrieveStream()) {
             db.create(object, stream);
         } catch (IOException e) {
-            System.out.println("could not backup: " + object.uri);;
+            System.out.println("could not backup: " + object.uri);
         }
     }
 }

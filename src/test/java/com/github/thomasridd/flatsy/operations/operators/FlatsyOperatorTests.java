@@ -45,7 +45,7 @@ public class FlatsyOperatorTests {
 
         // When
         // we run replace on the text file
-        FlatsyOperator operator = new ReplaceIn("camel", "sister");
+        FlatsyOperator operator = new Replace("camel", "sister");
         operator.apply(object);
 
         // Then
@@ -63,7 +63,7 @@ public class FlatsyOperatorTests {
 
         // When
         // we run replace on the text file
-        FlatsyOperator operator = new ReplaceIn("camel", "sister");
+        FlatsyOperator operator = new Replace("camel", "sister");
         FlatsyWorker worker = new FlatsyWorker(operator);
 
         FlatsyCursor cursor = db.root().query("{is_file}");
@@ -87,7 +87,7 @@ public class FlatsyOperatorTests {
         // When
         // we run migrate to a second database
         FlatsyDatabase target = new FlatsyFlatFileDatabase(emptyRoot);
-        FlatsyOperator operator = new Migrate(target);
+        FlatsyOperator operator = new Copy(target);
         db.root().query("{uri_contains:camel}").apply(operator);
 
         // Then
@@ -110,7 +110,7 @@ public class FlatsyOperatorTests {
 
         // When
         // we run migrate to a second database
-        String results = null;
+        String results;
         try(ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
             db.root().apply(new UriToOutput(stream));
             results = new String(stream.toByteArray(), "UTF8");

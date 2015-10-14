@@ -2,6 +2,7 @@ package com.github.thomasridd.flatsy;
 
 import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
+import com.github.thomasridd.flatsy.query.matchers.MatcherCommandLineParser;
 import com.github.thomasridd.flatsy.util.FlatsyUtil;
 
 import java.nio.file.Paths;
@@ -72,8 +73,7 @@ public class FlatsyCommandLine {
     }
 
     protected FlatsyCursor buildQuery() {
-
-        return db.root().query("{all}");
+        return MatcherCommandLineParser.cursorFromFilterCommands(db, queryCommands);
     }
 
     protected FlatsyOperator buildOperation(List<String> args) {

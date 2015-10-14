@@ -11,10 +11,10 @@ import java.util.List;
 /**
  * Created by Tom.Ridd on 15/08/15.
  */
-public class JSONPathReturnsOne implements FlatsyMatcher {
+public class JSONPathAtLeastOne implements FlatsyMatcher {
     String jsonPath = null;
 
-    public JSONPathReturnsOne(String jsonPath) {
+    public JSONPathAtLeastOne(String jsonPath) {
         this.jsonPath = jsonPath;
     }
 
@@ -25,7 +25,7 @@ public class JSONPathReturnsOne implements FlatsyMatcher {
         try {
             DocumentContext context = JsonPath.parse(object.retrieveStream());
             List<Object> values = context.read(this.jsonPath);
-            return values.size() == 1;
+            return values.size() >= 1;
         } catch (IOException e) {
             System.out.println("Could not assess " + object.uri + " for " + jsonPath);
             return false;

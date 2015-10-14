@@ -5,7 +5,7 @@ import com.github.thomasridd.flatsy.FlatsyDatabase;
 import com.github.thomasridd.flatsy.FlatsyFlatFileDatabase;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
 import com.github.thomasridd.flatsy.query.matchers.JSONPathEquals;
-import com.github.thomasridd.flatsy.query.matchers.JSONPathReturnsOne;
+import com.github.thomasridd.flatsy.query.matchers.JSONPathAtLeastOne;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -56,7 +56,7 @@ public class FlatsyJSONPathTest {
 
         // When
         // we create a cursor
-        FlatsyMatcher jsonPath = new JSONPathReturnsOne("$.description.keywords[?(@ == economy)]");
+        FlatsyMatcher jsonPath = new JSONPathAtLeastOne("$.description.keywords[?(@ == economy)]");
         FlatsyCursor cursor = db.root().query("block:{uri_contains:timeseries}").query("{uri_ends:data.json}").query(jsonPath);
 
         // Then

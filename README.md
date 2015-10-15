@@ -4,8 +4,9 @@
 
  - Create, retrieve, update, delete, and query any file system
  - Additional updates and queries for dealing with json files
+ - Query the file system using a simple query language
 
-**Flatsy Query Language
+## QUERIES
 
 The query language is up and working. Use from an instance of FlatsyCommandLine to run commands individually or as a script  
   
@@ -21,7 +22,7 @@ FILTER URI_ENDS .flatsy
 LIST
 ```
 
-## FILTERS
+### FILTERS
 
 Files only
 ```
@@ -48,7 +49,7 @@ Files that contain a string
 FILTER FIND <Value>
 ```
 
-#### JSON
+##### JSON Filters
 https://github.com/jayway/JsonPath
 
 Files that contain valid JSON
@@ -68,7 +69,7 @@ FILTER JSONPATH $.field EQUALS value
 FILTER JSONPATH $.field EQUALS value1, value2, value3
 ```
 
-## ACTIONS
+### ACTIONS
 
 List uris
 ```
@@ -86,7 +87,7 @@ Find and Replace all values of a string
 ```
 REPLACE <Old Value> <New Value>
 ```
-
+#### JSON ACTIONS
 Create table using JsonPath values
 ```
 TABLE $.name $.summary $.description.type

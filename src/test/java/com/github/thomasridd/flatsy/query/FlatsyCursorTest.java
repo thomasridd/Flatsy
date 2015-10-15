@@ -274,7 +274,7 @@ public class FlatsyCursorTest {
         db.create(new FlatsyObject("alpha/contains_word.json", db), "I contain the word camel");
         db.create(new FlatsyObject("test/contains_word.json", db), "My camel is called Louise");
 
-        FlatsyQuery query = new FlatsyQuery(new ContentContains("camel"));
+        FlatsyQuery query = new FlatsyQuery(new Find("camel"));
 
         // When
         // we create a cursor

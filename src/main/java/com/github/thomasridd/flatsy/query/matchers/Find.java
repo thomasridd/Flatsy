@@ -10,10 +10,10 @@ import java.io.InputStreamReader;
 /**
  * Created by Tom.Ridd on 15/08/15.
  */
-public class ContentContains implements FlatsyMatcher {
+public class Find implements FlatsyMatcher {
     String containsString = null;
 
-    public ContentContains(String containsString) {
+    public Find(String containsString) {
         this.containsString = containsString.toLowerCase();
     }
 

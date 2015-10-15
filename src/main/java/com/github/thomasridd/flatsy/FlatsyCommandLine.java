@@ -1,6 +1,6 @@
 package com.github.thomasridd.flatsy;
 
-import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
+import com.github.thomasridd.flatsy.operations.operators.OperatorCommandLineParser;
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
 import com.github.thomasridd.flatsy.query.matchers.MatcherCommandLineParser;
 import com.github.thomasridd.flatsy.util.FlatsyUtil;
@@ -14,7 +14,7 @@ import java.util.List;
  * <p/>
  * Syntax options
  * <p/>
- * SELECT [path to root of FlatsyFlatFileDatabase]
+ * FROM [path to root of FlatsyFlatFileDatabase]
  * <p/>
  * FILTER
  * <p/>
@@ -27,6 +27,10 @@ public class FlatsyCommandLine {
     FlatsyDatabase db;
     List<String> queryCommands = new ArrayList<>();
 
+    public static void main(String[] args) {
+        FlatsyCommandLine cli = new FlatsyCommandLine();
+    }
+
     /**
      * Build a command using flatsy command line syntax
      *
@@ -38,7 +42,7 @@ public class FlatsyCommandLine {
         List<String> args = FlatsyUtil.commandArguments(command);
 
         String action = args.get(0).trim();
-        if (action.equalsIgnoreCase("select")) {
+        if (action.equalsIgnoreCase("from")) {
 
             // set the database root
             db = new FlatsyFlatFileDatabase(Paths.get(args.get(1).trim()));
@@ -52,33 +56,19 @@ public class FlatsyCommandLine {
         } else {
 
             // run a command
-            return applyOperation(args);
+            return applyOperation(command);
         }
-
     }
 
-    protected boolean applyOperation(List<String> args) {
+    protected boolean applyOperation(String command) {
         // Generate the cursor for the file system
-        FlatsyCursor query = buildQuery();
+        FlatsyCursor query = MatcherCommandLineParser.cursorFromFilterCommands(db, queryCommands);
         if (query == null) return false;
 
         // Generate the operator
-        FlatsyOperator operation = buildOperation(args);
-        if (operation == null) return false;
+        OperatorCommandLineParser.applyFromCommand(query, command);
 
-        // Apply the operation
-        query.apply(operation);
 
         return true;
     }
-
-    protected FlatsyCursor buildQuery() {
-        return MatcherCommandLineParser.cursorFromFilterCommands(db, queryCommands);
-    }
-
-    protected FlatsyOperator buildOperation(List<String> args) {
-
-        return null;
-    }
-
 }

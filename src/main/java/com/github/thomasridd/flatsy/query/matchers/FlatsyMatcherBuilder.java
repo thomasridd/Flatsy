@@ -35,7 +35,7 @@ public class FlatsyMatcherBuilder {
         } else if (queryType.equalsIgnoreCase("uri_contains")) {
             flatsyMatcher = new UriContains(arguments);
         } else if (queryType.equalsIgnoreCase("content_contains")) {
-            flatsyMatcher = new ContentContains(arguments);
+            flatsyMatcher = new Find(arguments);
         } else if (queryType.equalsIgnoreCase("is_file")) {
             flatsyMatcher = new IsFile();
         } else if (queryType.equalsIgnoreCase("all")) {

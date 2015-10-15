@@ -7,6 +7,8 @@ import com.github.thomasridd.flatsy.util.FlatsyUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -31,6 +33,8 @@ import java.util.Scanner;
 public class FlatsyCommandLine {
     FlatsyDatabase db;
     List<String> queryCommands = new ArrayList<>();
+
+    public OutputStream defaultOut = System.out; // Convenience for tests
 
     /**
      * Create a new FlatsyCommandLine
@@ -76,6 +80,9 @@ public class FlatsyCommandLine {
      * @return true if complete
      */
     public boolean runCommand(String command) {
+        // skip out on blank lines
+        if (command.trim().length() == 0) return true;
+
         // get the list of arguments
         List<String> args = FlatsyUtil.commandArguments(command);
 
@@ -134,7 +141,7 @@ public class FlatsyCommandLine {
         if (query == null) return false;
 
         // Generate the operator
-        OperatorCommandLineParser.applyFromCommand(query, command);
+        OperatorCommandLineParser.applyFromCommand(query, command, defaultOut);
 
         return true;
     }

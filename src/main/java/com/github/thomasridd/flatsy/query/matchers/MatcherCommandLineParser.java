@@ -75,7 +75,7 @@ public class MatcherCommandLineParser {
             return cursor.query(new JSONPathOneOf(args.get(2), args.subList(3, args.size() - 1)));
 
         } else if (args.get(1).equalsIgnoreCase("jsonpath_atleastone")) {
-            //
+            // filter by making sure each
             return cursor.query(new JSONPathAtLeastOne(args.get(2)));
 
         }

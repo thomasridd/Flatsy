@@ -6,6 +6,7 @@ import com.github.thomasridd.flatsy.util.FlatsyUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.List;
 public class OperatorCommandLineParser {
 
     public static void applyFromCommand(FlatsyCursor cursor, String command) {
+        applyFromCommand(cursor, command, System.out);
+    }
+    public static void applyFromCommand(FlatsyCursor cursor, String command, OutputStream defaultOut) {
         List<String> args = FlatsyUtil.commandArguments(command);
 
         if (args.get(0).equalsIgnoreCase("copy")) {
@@ -35,7 +39,7 @@ public class OperatorCommandLineParser {
                     e.printStackTrace();
                 }
             } else {
-                cursor.apply(new UriToOutput(System.out));
+                cursor.apply(new UriToOutput(defaultOut));
             }
         } else if (args.get(0).equalsIgnoreCase("table")) {
 
@@ -49,7 +53,7 @@ public class OperatorCommandLineParser {
                     e.printStackTrace();
                 }
             } else {
-                cursor.apply(new JSONPathsToOutput(System.out, paths));
+                cursor.apply(new JSONPathsToOutput(defaultOut, paths));
             }
         }
 

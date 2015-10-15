@@ -1,0 +1,7 @@
+FROM <ROOT>
+FILTER files
+COPY <ROOT2>
+
+FROM <ROOT2>
+FILTER files
+LIST

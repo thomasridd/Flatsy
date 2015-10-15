@@ -5,9 +5,14 @@ import com.github.thomasridd.flatsy.query.FlatsyCursor;
 import com.github.thomasridd.flatsy.query.matchers.MatcherCommandLineParser;
 import com.github.thomasridd.flatsy.util.FlatsyUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by thomasridd on 14/10/15.
@@ -27,8 +32,41 @@ public class FlatsyCommandLine {
     FlatsyDatabase db;
     List<String> queryCommands = new ArrayList<>();
 
-    public static void main(String[] args) {
-        FlatsyCommandLine cli = new FlatsyCommandLine();
+    /**
+     * Create a new FlatsyCommandLine
+     */
+    public FlatsyCommandLine() {};
+
+    /**
+     * Create a new FlatsyCommandLine and run a command
+     * @param command the command
+     */
+    public FlatsyCommandLine(String command) {
+        runCommand(command);
+    }
+
+    /**
+     * Create a new FlatsyCommandLine and run a list of commands
+     * @param commands a list of commands
+     */
+    public FlatsyCommandLine(List<String> commands) {
+        runScript(commands);
+    }
+
+    /**
+     * Create a new FlatsyCommandLine and run a script of commands
+     * @param script a path to a script
+     */
+    public FlatsyCommandLine(Path script) throws IOException {
+        runScript(script);
+    }
+
+    /**
+     * Create a new FlatsyCommandLine and run a script of commands
+     * @param stream a stream for script commands
+     */
+    public FlatsyCommandLine(InputStream stream) {
+        runScript(stream);
     }
 
     /**
@@ -60,14 +98,43 @@ public class FlatsyCommandLine {
         }
     }
 
+    public boolean runScript(List<String> commands) {
+        boolean result = true;
+        for (String command: commands) {
+            result = result && runCommand(command);
+        }
+        return result;
+    }
+
+    public boolean runScript(Path path) throws IOException {
+        boolean result = true;
+        try(Scanner scanner = new Scanner(Files.newInputStream(path))) {
+            while (scanner.hasNextLine()) {
+                result = result && runCommand(scanner.nextLine());
+            }
+        }
+        return result;
+    }
+
+    public boolean runScript(InputStream stream) {
+        boolean result = true;
+        Scanner scanner = new Scanner(stream);
+        while(scanner.hasNextLine()) {
+            result = result && runCommand(scanner.nextLine());
+        }
+        return result;
+    }
+
     protected boolean applyOperation(String command) {
-        // Generate the cursor for the file system
+        // Simply chuck blank lines
+        if (command.trim().equalsIgnoreCase("")) { return true;}
+
+        // Generate the cursor for the file systems
         FlatsyCursor query = MatcherCommandLineParser.cursorFromFilterCommands(db, queryCommands);
         if (query == null) return false;
 
         // Generate the operator
         OperatorCommandLineParser.applyFromCommand(query, command);
-
 
         return true;
     }

@@ -1,33 +1,44 @@
 # Flatsy
-*work in progress but at mvp stage to be...*
 
 **A database interface for your file system**
 
  - Create, retrieve, update, delete, and query any file system
  - Additional updates and queries for dealing with json files
 
-*coming in after that*
+**Flatsy Query Language**
 
-**Speed and safety**
+The query language is up and working. Use from an instance of FlatsyCommandLine to run commands individually or as a script  
+  
+A query takes the form FROM -> FILTER -> ACTIONS
 
- - Threadsafe file r/w
- - Parallelized queries
+****FROM <Root>****
+Select a root for the query
 
-*and then if I'm feeling really bold*
+***FILTERS***
 
-**A database interface for your database**
+****FILTER FILES****
+Filter to files
 
- - MongoDB Implementation
- - Migration tools
+****FILTER FOLDERS****
+Filter to folders
 
-*leaving in the distance the possiblity for*
+****FILTER URI_CONTAINS <Value>****
+Filter to objects whose path relative to root contains Value
 
-**A multi-layer database**
+****FILTER URI_ENDS <Value>****
+Filter to paths that end with a value
 
- - MongoDB layer for data
- - Filesystem layer for binaries
+****FILTER FIND <Value>****
+Filter to files that contain a string
 
-Its a dream...
+
+***JSON FILTERS***
+
+****FILTER JSONPATH VALID****
+Filter to files that contain valid json
+Does not check filenames so a .json prefilter would be useful
+
+****FILTER JSONPATH $.path EQUALS value1, value2, value3****
 
 
 

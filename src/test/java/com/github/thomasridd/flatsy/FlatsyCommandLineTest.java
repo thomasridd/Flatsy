@@ -79,6 +79,7 @@ public class FlatsyCommandLineTest {
     }
 
 
+
     private String getScriptOutput(Path script) throws IOException {
         String content = "";
         try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {

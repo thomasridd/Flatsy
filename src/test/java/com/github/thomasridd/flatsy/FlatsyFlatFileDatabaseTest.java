@@ -24,7 +24,6 @@ Path root = null;
     @Before
     public void setUp() throws Exception {
         // For all tests we copy the flatFileTest example dataset
-
         root = Builder.copyFlatFiles();
         simple = Builder.cursorTestDatabase();
     }
@@ -81,6 +80,7 @@ Path root = null;
         // shouldGiveJSONFile
         assertEquals(FlatsyObjectType.JSONFile, type);
     }
+
     @Test
     public void type_forExistingNonJsonURI_shouldGiveOtherFile() {
         // Given

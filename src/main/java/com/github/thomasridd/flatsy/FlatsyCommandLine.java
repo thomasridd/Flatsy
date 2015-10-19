@@ -2,6 +2,7 @@ package com.github.thomasridd.flatsy;
 
 import com.github.thomasridd.flatsy.operations.operators.OperatorCommandLineParser;
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
+import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
 import com.github.thomasridd.flatsy.query.matchers.MatcherCommandLineParser;
 import com.github.thomasridd.flatsy.util.FlatsyUtil;
 
@@ -105,6 +106,12 @@ public class FlatsyCommandLine {
         }
     }
 
+    /**
+     * Run a sequence of script commands
+     *
+     * @param commands a list of Flatsy query language commands
+     * @return success
+     */
     public boolean runScript(List<String> commands) {
         boolean result = true;
         for (String command: commands) {
@@ -113,6 +120,13 @@ public class FlatsyCommandLine {
         return result;
     }
 
+    /**
+     * Run a sequence of script commands from file
+     *
+     * @param path the file to run
+     * @return success
+     * @throws IOException
+     */
     public boolean runScript(Path path) throws IOException {
         boolean result = true;
         try(Scanner scanner = new Scanner(Files.newInputStream(path))) {
@@ -123,6 +137,12 @@ public class FlatsyCommandLine {
         return result;
     }
 
+    /**
+     * Run a sequence of script commands from stream
+     *
+     * @param stream the input stream
+     * @return success
+     */
     public boolean runScript(InputStream stream) {
         boolean result = true;
         Scanner scanner = new Scanner(stream);
@@ -132,6 +152,69 @@ public class FlatsyCommandLine {
         return result;
     }
 
+    /**
+     * Create a cursor from script filters on the specified path
+     *
+     * @param path
+     * @return
+     */
+    public FlatsyCursor cursor(Path path) throws IOException {
+        db = null;
+        try(Scanner scanner = new Scanner(Files.newInputStream(path))) {
+            while (scanner.hasNextLine()) {
+                buildCursor(scanner.nextLine());
+            }
+        }
+        return MatcherCommandLineParser.cursorFromFilterCommands(db, queryCommands);
+    }
+
+    /**
+     * Create a cursor based on a command list
+     * @param commands
+     * @return
+     */
+    public FlatsyCursor cursor(List<String> commands) {
+        for (String command: commands) {
+            buildCursor(command);
+        }
+        return MatcherCommandLineParser.cursorFromFilterCommands(db, queryCommands);
+    }
+
+    /**
+     * Add filters to the list of query commands ignoring any execute statements
+     *
+     * @param command a Flatsy command
+     * @return true if complete
+     */
+    private boolean buildCursor(String command) {
+        // skip out on blank lines
+        if (command.trim().length() == 0) return true;
+
+        // get the list of arguments
+        List<String> args = FlatsyUtil.commandArguments(command);
+
+        String action = args.get(0).trim();
+        if (action.equalsIgnoreCase("from")) {
+
+            // set the database root
+            db = new FlatsyFlatFileDatabase(Paths.get(args.get(1).trim()));
+            queryCommands = new ArrayList<>();
+            return true;
+        } else if (action.equalsIgnoreCase("filter")) {
+
+            // add to the query
+            queryCommands.add(command);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Apply an operation to the cursor currently defined by queryCommands
+     *
+     * @param command an operation in Flatsy syntax
+     * @return
+     */
     protected boolean applyOperation(String command) {
         // Simply chuck blank lines
         if (command.trim().equalsIgnoreCase("")) { return true;}

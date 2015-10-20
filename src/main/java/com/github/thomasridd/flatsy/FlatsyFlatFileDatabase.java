@@ -28,6 +28,10 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
         this.root = root;
     }
 
+    @Override
+    public String toString() {
+        return root.toString();
+    }
 
     @Override
     public FlatsyObject root() {
@@ -111,6 +115,16 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
             }
         } catch (IOException ex) {}
         return objects;
+    }
+
+    @Override
+    public FlatsyObject parent(FlatsyObject object) {
+        if (object.equals(object.db.root())) {
+            return null;
+        } else {
+            Path path = toPath(object.uri).getParent();
+            return new FlatsyObject(this.root.relativize(path).toString(), this);
+        }
     }
 
     /**

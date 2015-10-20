@@ -13,6 +13,10 @@ import java.util.List;
 
 /**
  * Created by Tom.Ridd on 15/08/15.
+ *
+ * Base object for Flatsy system
+ *
+ * Can be a directory or file
  */
 public class FlatsyObject implements Comparable {
     public FlatsyDatabase db;
@@ -63,6 +67,10 @@ public class FlatsyObject implements Comparable {
 
     public List<FlatsyObject> children() {
         return db.children(this);
+    }
+
+    public FlatsyObject parent () {
+        return db.parent(this);
     }
 
     @Override

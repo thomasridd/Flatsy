@@ -59,6 +59,7 @@ public interface FlatsyDatabase {
      */
     List<FlatsyObject> children(FlatsyObject object);
 
+    FlatsyObject parent(FlatsyObject object);
 
     void move(FlatsyObject object, String newUri);
 

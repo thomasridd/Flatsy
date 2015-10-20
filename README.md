@@ -6,47 +6,34 @@
  - Additional updates and queries for dealing with json files
  - Query the file system using a simple query language
 
-## QUERIES
+## Queries
 
 The query language is up and working. Use from an instance of FlatsyCommandLine to run commands individually or as a script  
   
-A query takes the form FROM -> FILTER -> ACTIONS
-
 Example: To list all files from a directory with uri ending .flatsy
 ```
-FROM /Users/Tom/
+from /Users/Tom/
 
-FILTER FILES
-FILTER URI_ENDS .flatsy
+filter files
+filter uri_ends .flatsy
 
-LIST
-```
-
-### FILTERS
-
-Files only
-```
-FILTER FILES
+list
 ```
 
-Folders only
+### Filters
+
+##### Simple filters
 ```
-FILTER FOLDERS
+filter files      // files only
+filter folders
+filter uri_ends <some string>     // uri ends with value
+filter uri_contains <some string> // uri contains a string
+filter find <some string>         // file contains a value
 ```
 
-URIs that contain a value
+##### Logic
 ```
-FILTER URI_CONTAINS <Value>
-```
-
-URIs that end with a value
-```
-FILTER URI_ENDS <Value>
-```
-
-Files that contain a string
-```
-FILTER FIND <Value>
+filter not ...    // invert the filter
 ```
 
 ##### JSON Filters
@@ -54,43 +41,27 @@ https://github.com/jayway/JsonPath
 
 Files that contain valid JSON
 ```
-FILTER JSONPATH VALID
+filter jsonpath valid
+filter jsonpath $.field exists
+filter jsonpath $.field equals <value1> <value2> <...>
 ```
 
-Files that contain valid JSON for a specific field
+### Actions
+
+##### Simple actions
 ```
-FILTER JSONPATH $.field EXISTS
+list
+list <output file path>
+copy <second database route>         // copy files to an identical uri in the second database
+folder_copy <second database route>  // copy files and all files in the same directory
+replace <old value> <new value>      // replace string in file
 ```
 
-Files with a json field equal to a value or from a list
-```
-FILTER JSONPATH $.field EQUALS value
-
-FILTER JSONPATH $.field EQUALS value1, value2, value3
-```
-
-### ACTIONS
-
-List uris
-```
-LIST
-
-LIST <output file path>
-```
-
-Copy files to a parallel flat file instance
-```
-COPY <second database route>
-```
-
-Find and Replace all values of a string
-```
-REPLACE <Old Value> <New Value>
-```
-#### JSON ACTIONS
+##### JSON actions
 Create table using JsonPath values
 ```
-TABLE $.name $.summary $.description.type
+TABLE $.path1 $.path2 $.path3
+TABLE <output file path> $.path1 $.path2 $.path3
 ```
 
 

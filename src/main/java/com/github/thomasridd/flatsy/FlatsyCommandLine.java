@@ -247,4 +247,15 @@ public class FlatsyCommandLine {
 
         return true;
     }
+
+    public static void main(String[] args) {
+        FlatsyCommandLine cli = new FlatsyCommandLine();
+        Scanner scanner = new Scanner(System.in);
+
+        while(true) {
+            System.out.print("flatsy >> ");
+            String command = scanner.nextLine();
+            cli.runCommand(command);
+        }
+    }
 }

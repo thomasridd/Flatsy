@@ -26,9 +26,17 @@ public class OperatorCommandLineParser {
             // copy objects to a new filesystem
             cursor.apply(new Copy(new FlatsyFlatFileDatabase(Paths.get(args.get(1)))));
 
+        } else if (args.get(0).equalsIgnoreCase("copy_to")) {
+            // replace text in each object
+            cursor.apply(new CopyTo(new FlatsyFlatFileDatabase(Paths.get(args.get(1))), args.get(2)));
+
         } else if (args.get(0).equalsIgnoreCase("folder_copy")) {
             // replace text in each object
             cursor.apply(new Copy(new FlatsyFlatFileDatabase(Paths.get(args.get(1))), true));
+
+        } else if (args.get(0).equalsIgnoreCase("folder_copy_to")) {
+            // replace text in each object
+            cursor.apply(new CopyTo(new FlatsyFlatFileDatabase(Paths.get(args.get(1))), args.get(2), true));
 
         } else if (args.get(0).equalsIgnoreCase("replace")) {
             // replace text in each object

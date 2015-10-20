@@ -74,6 +74,7 @@ public class FlatsyOperatorTests {
         String replaced = object.retrieve();
         assertEquals("Alice was the name of my sister", replaced);
     }
+
     @Test
     public void migrateOperator_forMultipleObjects_shouldCopyObjects() throws IOException {
         // Given
@@ -103,7 +104,7 @@ public class FlatsyOperatorTests {
     }
 
     @Test
-         public void uriToOutputOperator_forQuery_shouldListObjects() throws IOException {
+    public void uriToOutputOperator_forQuery_shouldListObjects() throws IOException {
         // Given
         // a database with a text file
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);

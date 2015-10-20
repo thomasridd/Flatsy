@@ -66,7 +66,7 @@ public class FlatsyUtilTest {
     @Test
     public void stringBuilder_withFlatsyObject_addsUri() throws IOException {
         // Given
-        // a simple expression
+        // a flatsy object and simple expression
         String expression = "URI= + ~.uri";
         FlatsyDatabase db = new FlatsyFlatFileDatabase(Builder.emptyTestDatabase());
         FlatsyObject object = new FlatsyObject("test/object", db);
@@ -78,6 +78,41 @@ public class FlatsyUtilTest {
         // Then
         // it returns the expected result
         assertEquals("URI=test/object", result);
+    }
+
+    @Test
+    public void stringBuilder_withFlatsyObject_addsParent() throws IOException {
+        // Given
+        // a flatsy object and simple expression
+        String expression = "Parent= + ~.parent";
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(Builder.emptyTestDatabase());
+        FlatsyObject object = new FlatsyObject("theme/parent/object.json", db);
+
+        // When
+        // we build a string
+        String result = FlatsyUtil.stringOperation(expression, object);
+
+        // Then
+        // it returns the expected result
+        assertEquals("Parent=theme/parent", result);
+    }
+
+    @Test
+    public void stringBuilder_withFlatsyObject_addsFilename() throws IOException {
+        // Given
+        // a flatsy object and simple expression
+        String expression = "File= + ~.file";
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(Builder.emptyTestDatabase());
+        FlatsyObject object = new FlatsyObject("theme/parent/object.json", db);
+        object.create("Test");
+
+        // When
+        // we build a string
+        String result = FlatsyUtil.stringOperation(expression, object);
+
+        // Then
+        // it returns the expected result
+        assertEquals("File=object.json", result);
     }
 
     @Test

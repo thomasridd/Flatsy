@@ -1,10 +1,13 @@
 package com.github.thomasridd.flatsy.util;
 
 import com.github.thomasridd.flatsy.FlatsyObject;
+import com.github.thomasridd.flatsy.FlatsyObjectType;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -59,6 +62,17 @@ public class FlatsyUtil {
             if (item.equalsIgnoreCase("~.uri")) {
                 // add the object uri
                 result += object.uri;
+            } else if(item.equalsIgnoreCase("~.file")) {
+                // add the object filename
+                if (object.getType() == FlatsyObjectType.JSONFile || object.getType() == FlatsyObjectType.OtherFile) {
+                    Path p = Paths.get(object.uri);
+                    result += p.getFileName().toString();
+                }
+            } else if(item.equalsIgnoreCase("~.parent")) {
+                // add the object filename
+                if (object.parent() != null) {
+                    result += object.parent().uri;
+                }
 
             } else if(item.startsWith("$.")) {
                 // add a jsonpath string
@@ -74,7 +88,6 @@ public class FlatsyUtil {
             } else {
                 // straight string
                 result += item;
-
             }
         }
         return result;

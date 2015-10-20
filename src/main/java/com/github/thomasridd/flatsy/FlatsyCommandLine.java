@@ -99,10 +99,29 @@ public class FlatsyCommandLine {
             // add to the query
             queryCommands.add(command);
             return true;
-        } else {
+        } else if (action.equalsIgnoreCase("clear")) {
+            queryCommands = new ArrayList<>();
+            return true;
+
+        } else if (action.equalsIgnoreCase("print")) {
+            System.out.println("");
+            System.out.println("FROM " + db.toString());
+            for (String query: queryCommands) {
+                System.out.println(query);
+            }
+            return true;
+
+        }else {
+            long start = System.currentTimeMillis();
 
             // run a command
-            return applyOperation(command);
+            boolean result = applyOperation(command);
+
+            long total = System.currentTimeMillis() - start;
+
+            System.out.println(command + " >> Applied in " +  total + " milliseconds");
+
+            return result;
         }
     }
 

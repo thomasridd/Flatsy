@@ -61,9 +61,9 @@ public class Copy implements FlatsyOperator {
         }
 
         for(FlatsyObject copyObject: objectList) {
-            if (object.getType() != FlatsyObjectType.Folder) {
+            if (copyObject.getType() != FlatsyObjectType.Folder) {
                 db.delete(copyObject);
-                try (InputStream stream = object.retrieveStream()) {
+                try (InputStream stream = copyObject.retrieveStream()) {
                     db.create(copyObject, stream);
                 } catch (IOException e) {
                     System.out.println("could not copy: " + copyObject.uri);

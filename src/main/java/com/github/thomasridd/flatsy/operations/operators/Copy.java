@@ -6,6 +6,8 @@ import com.github.thomasridd.flatsy.FlatsyObjectType;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by thomasridd on 18/08/15.
@@ -19,20 +21,54 @@ import java.io.InputStream;
  */
 public class Copy implements FlatsyOperator {
     FlatsyDatabase db;
+    boolean copyFolder = false;
 
+    /**
+     * Create copy object to an alternate database
+     *
+     * @param db any alternate Flatsy database
+     */
     public Copy(FlatsyDatabase db) {
         this.db = db;
     }
 
+    /**
+     * Create copy object to an alternate database
+     *
+     * @param db any alternate Flatsy database
+     * @param copyFolder copy all folder contents
+     */
+    public Copy(FlatsyDatabase db, boolean copyFolder) {
+        this.db = db; this.copyFolder = copyFolder;
+    }
+
+    /**
+     * Apply the copy operation
+     *
+     * @param object to a specific object
+     */
     @Override
     public void apply(FlatsyObject object) {
         if (object.getType() == FlatsyObjectType.Folder || object.getType() == FlatsyObjectType.Null) { return; }
 
-        db.delete(object);
-        try (InputStream stream = object.retrieveStream()) {
-            db.create(object, stream);
-        } catch (IOException e) {
-            System.out.println("could not backup: " + object.uri);
+        List<FlatsyObject> objectList = new ArrayList<>();
+        if (copyFolder) {
+            for (FlatsyObject sibling: object.parent().children()) {
+                objectList.add(sibling);
+            }
+        } else {
+            objectList.add(object);
+        }
+
+        for(FlatsyObject copyObject: objectList) {
+            if (object.getType() != FlatsyObjectType.Folder) {
+                db.delete(copyObject);
+                try (InputStream stream = object.retrieveStream()) {
+                    db.create(copyObject, stream);
+                } catch (IOException e) {
+                    System.out.println("could not copy: " + copyObject.uri);
+                }
+            }
         }
     }
 }

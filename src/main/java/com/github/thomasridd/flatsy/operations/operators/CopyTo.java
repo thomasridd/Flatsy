@@ -72,7 +72,7 @@ public class CopyTo implements FlatsyOperator {
 
                 try {
                     // Get the new destination
-                    String destination = FlatsyUtil.stringOperation(this.newUriExpression, copyObject);
+                    String destination = FlatsyUtil.stringExpression(this.newUriExpression, copyObject);
                     FlatsyObject destinationObject = new FlatsyObject(destination, this.db);
 
                     // check we aren't copying the file to itself

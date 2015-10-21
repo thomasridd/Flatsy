@@ -41,7 +41,7 @@ public class FlatsyUtilTest {
 
         // When
         // we build a string
-        String result = FlatsyUtil.stringOperation(expression, null);
+        String result = FlatsyUtil.stringExpression(expression, null);
 
         // Then
         // it returns the expected result
@@ -56,7 +56,7 @@ public class FlatsyUtilTest {
 
         // When
         // we build a string
-        String result = FlatsyUtil.stringOperation(expression, null);
+        String result = FlatsyUtil.stringExpression(expression, null);
 
         // Then
         // it returns the expected result
@@ -73,7 +73,7 @@ public class FlatsyUtilTest {
 
         // When
         // we build a string
-        String result = FlatsyUtil.stringOperation(expression, object);
+        String result = FlatsyUtil.stringExpression(expression, object);
 
         // Then
         // it returns the expected result
@@ -90,7 +90,7 @@ public class FlatsyUtilTest {
 
         // When
         // we build a string
-        String result = FlatsyUtil.stringOperation(expression, object);
+        String result = FlatsyUtil.stringExpression(expression, object);
 
         // Then
         // it returns the expected result
@@ -108,7 +108,7 @@ public class FlatsyUtilTest {
 
         // When
         // we build a string
-        String result = FlatsyUtil.stringOperation(expression, object);
+        String result = FlatsyUtil.stringExpression(expression, object);
 
         // Then
         // it returns the expected result
@@ -126,7 +126,7 @@ public class FlatsyUtilTest {
 
         // When
         // we build a string
-        String result = FlatsyUtil.stringOperation(expression, object);
+        String result = FlatsyUtil.stringExpression(expression, object);
 
         // Then
         // it returns the expected result

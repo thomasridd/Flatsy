@@ -48,7 +48,7 @@ public class FlatsyUtil {
      * @return
      * @throws IOException
      */
-    public static String stringOperation(String expression, FlatsyObject object) throws IOException {
+    public static String stringExpression(String expression, FlatsyObject object) throws IOException {
         List<String> list = new ArrayList<>();
 
         String replaced = expression.replace("++", "+ \" \" +");

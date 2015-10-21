@@ -7,8 +7,6 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
 
 /**
  * Created by thomasridd on 18/08/15.
@@ -38,7 +36,7 @@ public class JSONPathPut implements FlatsyOperator {
             if (expression.startsWith("{") && expression.endsWith("}") || expression.startsWith("[") && expression.endsWith("]")) {
                 value = JsonPath.parse(expression).json();
             } else {
-                value = FlatsyUtil.stringOperation(this.expression, object);
+                value = FlatsyUtil.stringExpression(this.expression, object);
             }
 
             DocumentContext context = JsonPath.parse(object.retrieveStream());

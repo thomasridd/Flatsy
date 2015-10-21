@@ -22,27 +22,28 @@ public class OperatorCommandLineParser {
     public static void applyFromCommand(FlatsyCursor cursor, String command, OutputStream defaultOut) {
         List<String> args = FlatsyUtil.commandArguments(command);
 
-        if (args.get(0).equalsIgnoreCase("copy")) {
+        String action = args.get(0);
+        if (action.equalsIgnoreCase("copy")) {
             // copy objects to a new filesystem
             cursor.apply(new Copy(new FlatsyFlatFileDatabase(Paths.get(args.get(1)))));
 
-        } else if (args.get(0).equalsIgnoreCase("copy_to")) {
+        } else if (action.equalsIgnoreCase("copy_to")) {
             // replace text in each object
             cursor.apply(new CopyTo(new FlatsyFlatFileDatabase(Paths.get(args.get(1))), args.get(2)));
 
-        } else if (args.get(0).equalsIgnoreCase("folder_copy")) {
+        } else if (action.equalsIgnoreCase("folder_copy")) {
             // replace text in each object
             cursor.apply(new Copy(new FlatsyFlatFileDatabase(Paths.get(args.get(1))), true));
 
-        } else if (args.get(0).equalsIgnoreCase("folder_copy_to")) {
+        } else if (action.equalsIgnoreCase("folder_copy_to")) {
             // replace text in each object
             cursor.apply(new CopyTo(new FlatsyFlatFileDatabase(Paths.get(args.get(1))), args.get(2), true));
 
-        } else if (args.get(0).equalsIgnoreCase("replace")) {
+        } else if (action.equalsIgnoreCase("replace")) {
             // replace text in each object
             cursor.apply(new Replace(args.get(1), args.get(2)));
 
-        } else if (args.get(0).equalsIgnoreCase("list")) {
+        } else if (action.equalsIgnoreCase("list")) {
             // list all matching objects
             if (args.size() > 1) {
                 try (OutputStream stream = Files.newOutputStream(Paths.get(args.get(1)))) {
@@ -53,7 +54,7 @@ public class OperatorCommandLineParser {
             } else {
                 cursor.apply(new UriToOutput(defaultOut));
             }
-        } else if (args.get(0).equalsIgnoreCase("table")) {
+        } else if (action.equalsIgnoreCase("table")) {
 
             List<String> paths = args.subList(1, args.size());
 
@@ -66,6 +67,20 @@ public class OperatorCommandLineParser {
                 }
             } else {
                 cursor.apply(new JSONPathsToOutput(defaultOut, paths));
+            }
+        } else if (action.equalsIgnoreCase("jsonpath")) {
+            String jsonpath = args.get(1);
+            String jsonAction = args.get(2);
+            String jsonValue = args.size() >= 4 ? args.get(3) : "";
+
+            if (jsonAction.equalsIgnoreCase("add")) {
+
+            } else if (jsonAction.equalsIgnoreCase("add_json")) {
+
+            } else if (jsonAction.equalsIgnoreCase("put")) {
+
+            } else if (jsonAction.equalsIgnoreCase("put_json")) {
+
             }
         }
 

@@ -71,16 +71,18 @@ public class OperatorCommandLineParser {
         } else if (action.equalsIgnoreCase("jsonpath")) {
             String jsonpath = args.get(1);
             String jsonAction = args.get(2);
-            String jsonValue = args.size() >= 4 ? args.get(3) : "";
 
             if (jsonAction.equalsIgnoreCase("add")) {
 
-            } else if (jsonAction.equalsIgnoreCase("add_json")) {
-
             } else if (jsonAction.equalsIgnoreCase("put")) {
+                if (args.size() >= 5) {
 
-            } else if (jsonAction.equalsIgnoreCase("put_json")) {
+                    String jsonField = args.get(3);
+                    String jsonValue = args.get(4);
 
+                    cursor.apply(new JSONPathPut(jsonpath, jsonField, jsonValue));
+
+                }
             }
         }
 

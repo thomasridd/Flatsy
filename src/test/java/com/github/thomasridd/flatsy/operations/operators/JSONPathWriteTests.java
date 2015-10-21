@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 /**
  * Created by thomasridd on 21/10/15.
  */
-public class JSONPathPutTest {
+public class JSONPathWriteTests {
 
     @Test
     public void putOperator_givenSimplePath_addsField() throws IOException {
@@ -95,5 +95,67 @@ public class JSONPathPutTest {
         // it updates the field
         System.out.println(object.retrieve());
         assertEquals("{\"animal\":{\"name\":\"horse\",\"feet\":4}}", object.retrieve());
+    }
+
+    @Test
+    public void addOperator_givenString_addsValue() throws IOException {
+        // Given
+        // an empty database with a proto-json item
+        Path dbPath = Builder.emptyTestDatabase();
+        FlatsyFlatFileDatabase db = new FlatsyFlatFileDatabase(dbPath);
+        FlatsyObject object = new FlatsyObject("put/test.json", db);
+        object.create("{\"types\":[\"animal\",\"vegetable\",\"mineral\"]}");
+
+        // When
+        // we write a simple object
+        JSONPathAdd add = new JSONPathAdd("$", "types", "robot");
+        add.apply(object);
+
+        // Then
+        // it creates a field
+        System.out.println(object.retrieve());
+        assertEquals("{\"types\":[\"animal\",\"vegetable\",\"mineral\",\"robot\"]}", object.retrieve());
+    }
+
+    @Test
+    public void addOperator_whenArrayDoesntExist_createsArray() throws IOException {
+        // Given
+        // an empty database with a proto-json item
+        Path dbPath = Builder.emptyTestDatabase();
+        FlatsyFlatFileDatabase db = new FlatsyFlatFileDatabase(dbPath);
+        FlatsyObject object = new FlatsyObject("put/test.json", db);
+        object.create("{}");
+
+        // When
+        // we write a simple object
+        JSONPathAdd add = new JSONPathAdd("$", "types", "robot");
+        add.apply(object);
+
+        // Then
+        // it creates a field
+        System.out.println(object.retrieve());
+        assertEquals("{\"types\":[\"robot\"]}", object.retrieve());
+    }
+
+    @Test
+    public void addOperator_givenArray_addsSubArray() throws IOException {
+        // Given
+        // an empty database with a proto-json item
+        Path dbPath = Builder.emptyTestDatabase();
+        FlatsyFlatFileDatabase db = new FlatsyFlatFileDatabase(dbPath);
+        FlatsyObject object = new FlatsyObject("put/test.json", db);
+        object.create("{\"types\":[\"animal\"]}");
+
+
+
+        // When
+        // we write a simple object
+        JSONPathAdd add = new JSONPathAdd("$", "types", "[\"one\",\"two\",\"three\"]");
+        add.apply(object);
+
+        // Then
+        // it creates a field
+        System.out.println(object.retrieve());
+        assertEquals("{\"types\":[\"animal\",[\"one\",\"two\",\"three\"]]}", object.retrieve());
     }
 }

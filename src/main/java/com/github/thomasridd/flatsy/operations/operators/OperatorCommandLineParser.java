@@ -73,7 +73,14 @@ public class OperatorCommandLineParser {
             String jsonAction = args.get(2);
 
             if (jsonAction.equalsIgnoreCase("add")) {
+                if (args.size() >= 5) {
 
+                    String jsonField = args.get(3);
+                    String jsonValue = args.get(4);
+
+                    cursor.apply(new JSONPathAdd(jsonpath, jsonField, jsonValue));
+
+                }
             } else if (jsonAction.equalsIgnoreCase("put")) {
                 if (args.size() >= 5) {
 

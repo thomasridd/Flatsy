@@ -24,6 +24,17 @@ public class Builder {
         FileUtils.copyDirectory(Paths.get(flatfiletest.getPath()).toFile(), toPath.toFile());
         return toPath;
     }
+
+    public static Path copyDatasetFiles() throws IOException {
+        Path tempDir = Files.createTempDirectory("datamigrate");
+        return copyDatasetFiles(tempDir);
+    }
+    public static Path copyDatasetFiles(Path toPath) throws IOException {
+        URL flatfiletest = Builder.class.getResource("/datamigrate");
+        FileUtils.copyDirectory(Paths.get(flatfiletest.getPath()).toFile(), toPath.toFile());
+        return toPath;
+    }
+
     public static Path refreshFlatFiles(Path atPath) throws IOException {
         FileUtils.deleteDirectory(atPath.toFile());
         return copyFlatFiles(atPath);

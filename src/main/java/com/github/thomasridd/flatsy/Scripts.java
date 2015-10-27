@@ -8,6 +8,7 @@ import com.github.onsdigital.zebedee.content.util.ContentUtil;
 import com.github.thomasridd.flatsy.operations.operators.CopyTo;
 import com.github.thomasridd.flatsy.operations.operators.Delete;
 import com.github.thomasridd.flatsy.operations.operators.Replace;
+import com.github.thomasridd.flatsy.util.FlatsyUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -15,7 +16,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by thomasridd on 23/10/15.
@@ -41,6 +44,8 @@ public class Scripts {
     }
 
     public static boolean copyDatasetToSubfolders(FlatsyObject datasetObj) throws IOException, URISyntaxException {
+        Map<String, String> oldUriNewUri = new HashMap<>();
+
         try (InputStream stream = datasetObj.retrieveStream()) {
 
             Delete delete = new Delete(datasetObj.db);
@@ -51,6 +56,9 @@ public class Scripts {
 
                 FlatsyObject file = datasetObj.db.get(download.getFile());
                 String folder = cleanString(download.getTitle());
+
+                String newUri = FlatsyUtil.stringExpression("~.parent + /" + folder + "/ + ~.file", file);
+                oldUriNewUri.put(file.uri, newUri);
 
                 CopyTo copyTo = new CopyTo(datasetObj.db, "~.parent + /" + folder + "/ + ~.file");
                 copyTo.apply(datasetObj);
@@ -73,16 +81,19 @@ public class Scripts {
         DatasetLandingPage landingPage;
         try (InputStream stream = datasetObj.retrieveStream()) {
 
-
-
             landingPage = ContentUtil.deserialise(stream, DatasetLandingPage.class);
             List<Link> datasets = new ArrayList<>();
 
-            for (FlatsyObject object: datasetObj.parent().children()) {
-                if (object.getType() == FlatsyObjectType.Folder) {
-                    datasets.add( new Link(new URI(object.uri)));
-                }
+            for (DownloadSection download: landingPage.getDownloads()) {
+                String oldUri = download.getFile();
+                if (oldUri.startsWith("/")) oldUri = oldUri.substring(1);
+                datasets.add(new Link(new URI(oldUriNewUri.get(oldUri))));
             }
+//            for (FlatsyObject object: datasetObj.parent().children()) {
+//                if (object.getType() == FlatsyObjectType.Folder) {
+//                    datasets.add( new Link(new URI(object.uri)));
+//                }
+//            }
 
             landingPage.setDownloads(null);
             landingPage.setDatasets(datasets);

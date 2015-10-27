@@ -171,6 +171,7 @@ public class FlatsyCommandLine {
         return result;
     }
 
+
     /**
      * Create a cursor from script filters on the specified path
      *
@@ -196,6 +197,10 @@ public class FlatsyCommandLine {
         for (String command: commands) {
             buildCursor(command);
         }
+        return MatcherCommandLineParser.cursorFromFilterCommands(db, queryCommands);
+    }
+
+    public FlatsyCursor cursor() {
         return MatcherCommandLineParser.cursorFromFilterCommands(db, queryCommands);
     }
 

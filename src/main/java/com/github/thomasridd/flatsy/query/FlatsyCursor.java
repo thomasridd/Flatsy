@@ -65,6 +65,14 @@ public class FlatsyCursor {
         return false;
     }
 
+    public List<FlatsyObject> getAll() {
+        List<FlatsyObject> list = new ArrayList<>();
+        while (next()) {
+            list.add(currentObject());
+        }
+        return list;
+    }
+
     boolean onNextStepMoveDownTree = false;
 
     boolean takeStep() {

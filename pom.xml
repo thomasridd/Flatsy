@@ -29,7 +29,7 @@
     <dependencies>
         <dependency>
             <groupId>com.github.onsdigital</groupId>
-            <artifactId>zebedee</artifactId>
+            <artifactId>zebedee-reader</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -81,11 +81,11 @@
         </dependency>
 
         <!-- ONS Content Library, fetched through jitpack.io -->
-        <dependency>
-            <groupId>com.github.ONSdigital</groupId>
-            <artifactId>content-library</artifactId>
-            <version>content-library-1.0.67</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.github.ONSdigital</groupId>-->
+            <!--<artifactId>content-library</artifactId>-->
+            <!--<version>content-library-1.0.67</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>net.sf.opencsv</groupId>
             <artifactId>opencsv</artifactId>

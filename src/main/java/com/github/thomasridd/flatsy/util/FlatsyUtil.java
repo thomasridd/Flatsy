@@ -64,10 +64,8 @@ public class FlatsyUtil {
                 result += object.uri;
             } else if(item.equalsIgnoreCase("~.file")) {
                 // add the object filename
-                if (object.getType() == FlatsyObjectType.JSONFile || object.getType() == FlatsyObjectType.OtherFile) {
                     Path p = Paths.get(object.uri);
                     result += p.getFileName().toString();
-                }
             } else if(item.equalsIgnoreCase("~.parent")) {
                 // add the object filename
                 if (object.parent() != null) {

@@ -60,6 +60,27 @@ public class ScriptsTest {
         List<FlatsyObject> flatsyObjects = Scripts.datasetFiles(root.toString());
         for (FlatsyObject obj: flatsyObjects) {
             Scripts.copyDatasetToSubfolders(obj);
+
+        }
+
+        System.out.println(root.toString());
+        // Then
+        // we should get a list of files
+        assertNotEquals(0, flatsyObjects.size());
+
+    }
+
+    @Test
+    public void copyTimeseresDatasetToSubfolders_givenFolderWithDatasets_movesFiles() throws IOException, URISyntaxException {
+        // Given
+        // a database
+        FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
+
+        // When
+        // we get our script of datasetFiles
+        List<FlatsyObject> flatsyObjects = Scripts.timeseriesDatasets(root.toString());
+        for (FlatsyObject obj: flatsyObjects) {
+            Scripts.copyTimeseriesDatasetToSubfolders(obj);
         }
 
         System.out.println(root.toString());

@@ -107,35 +107,37 @@ public class Scripts {
             for (DownloadSection download: dataset.getDownloads()) {
                 System.out.println("      shifting: " + download.getFile() );
                 // Find the files we are going to be shifting
-                FlatsyObject file = datasetObj.db.get(download.getFile());
-                String folder = cleanString(download.getTitle());
-                if (folder.equalsIgnoreCase("latest") || folder.toLowerCase().equalsIgnoreCase("latest") || folder.equalsIgnoreCase("data")) {
-                    folder = "current";
+                if (download.getFile() != null) {
+                    FlatsyObject file = datasetObj.db.get(download.getFile());
+                    String folder = cleanString(download.getTitle());
+                    if (folder.equalsIgnoreCase("latest") || folder.toLowerCase().equalsIgnoreCase("latest") || folder.equalsIgnoreCase("data")) {
+                        folder = "current";
+                    }
+
+                    // Get a plan
+                    String newJsonUri = FlatsyUtil.stringExpression("~.parent + /" + folder + "/data.json", file);
+                    String newFileUri = FlatsyUtil.stringExpression("~.parent + /" + folder + "/ + ~.file", file);
+                    String newUri = FlatsyUtil.stringExpression("~.parent + /" + folder, file);
+                    String oldUri = FlatsyUtil.stringExpression("~.parent", file);
+
+                    oldUriNewJsonUri.put(file.uri, newJsonUri);
+                    oldUriNewFolder.put(file.uri, FlatsyUtil.stringExpression("~.parent + /" + folder, file));
+                    newJsonUriOldFileUri.put(newJsonUri, file.uri);
+                    newJsonUriFilename.put(newJsonUri, FlatsyUtil.stringExpression("~.file", file));
+                    newJsonUriNewFileUri.put(newJsonUri, newFileUri);
+
+                    newJsonUriNewUri.put(newJsonUri, newUri);
+                    newJsonUriOldUri.put(newJsonUri, oldUri);
+
+                    newUriDownloadTitle.put(newJsonUri, download.getTitle());
+
+                    // Do the copying
+                    CopyTo copyTo = new CopyTo(datasetObj.db, "~.parent + /" + folder + "/ + ~.file");
+                    copyTo.apply(datasetObj);
+                    copyTo.apply(file);
+
+                    delete.apply(file);
                 }
-
-                // Get a plan
-                String newJsonUri = FlatsyUtil.stringExpression("~.parent + /" + folder + "/data.json", file);
-                String newFileUri = FlatsyUtil.stringExpression("~.parent + /" + folder + "/ + ~.file", file);
-                String newUri = FlatsyUtil.stringExpression("~.parent + /" + folder, file);
-                String oldUri = FlatsyUtil.stringExpression("~.parent", file);
-
-                oldUriNewJsonUri.put(file.uri, newJsonUri);
-                oldUriNewFolder.put(file.uri, FlatsyUtil.stringExpression("~.parent + /" + folder, file));
-                newJsonUriOldFileUri.put(newJsonUri, file.uri);
-                newJsonUriFilename.put(newJsonUri, FlatsyUtil.stringExpression("~.file", file));
-                newJsonUriNewFileUri.put(newJsonUri, newFileUri);
-
-                newJsonUriNewUri.put(newJsonUri, newUri);
-                newJsonUriOldUri.put(newJsonUri, oldUri);
-
-                newUriDownloadTitle.put(newJsonUri, download.getTitle());
-
-                // Do the copying
-                CopyTo copyTo = new CopyTo(datasetObj.db, "~.parent + /" + folder + "/ + ~.file");
-                copyTo.apply(datasetObj);
-                copyTo.apply(file);
-
-                delete.apply(file);
             }
 
             // Edit dataset files
@@ -165,9 +167,11 @@ public class Scripts {
 
             for (DownloadSection download: landingPage.getDownloads()) {
                 String oldUri = download.getFile();
-                if (oldUri.startsWith("/")) oldUri = oldUri.substring(1);
+                if (oldUri != null) {
+                    if (oldUri.startsWith("/")) oldUri = oldUri.substring(1);
 
-                datasets.add(new Link(new URI("/" + oldUriNewFolder.get(oldUri))));
+                    datasets.add(new Link(new URI("/" + oldUriNewFolder.get(oldUri))));
+                }
             }
 
             landingPage.setDownloads(null);
@@ -356,7 +360,7 @@ public class Scripts {
                 "$", "type", "timeseries_dataset");
 
         // Set up the database
-        Path root = Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/master");
+        Path root = Paths.get("/Users/thomasridd/git/zebedee/zebedee-cms/src/test/resources/bootstraps");
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
 
         // Part one - fix up the regular datasets

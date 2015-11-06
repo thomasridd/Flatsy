@@ -1,5 +1,6 @@
 package com.github.thomasridd.flatsy;
 
+import com.github.onsdigital.zebedee.content.page.statistics.data.timeseries.TimeSeries;
 import com.github.onsdigital.zebedee.content.page.statistics.dataset.Dataset;
 import com.github.onsdigital.zebedee.content.page.statistics.dataset.DatasetLandingPage;
 import com.github.onsdigital.zebedee.content.page.statistics.dataset.DownloadSection;
@@ -13,8 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import javax.ws.rs.DELETE;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -77,6 +80,24 @@ public class Scripts {
         return doUpdate;
     }
 
+    public static List<FlatsyObject> allDatasets(String root) {
+        FlatsyCommandLine cli = new FlatsyCommandLine();
+        cli.runCommand("from " + root);
+        cli.runCommand("filter uri_contains /datasets/");
+        cli.runCommand("filter uri_ends /data.json");
+        cli.runCommand("filter jsonpath $.type equals timeseries_dataset");
+        List<FlatsyObject> all = cli.cursor().getAll();
+
+        cli = new FlatsyCommandLine();
+        cli.runCommand("from " + root);
+        cli.runCommand("filter uri_contains /datasets/");
+        cli.runCommand("filter uri_ends /data.json");
+        cli.runCommand("filter jsonpath $.type equals dataset");
+        List<FlatsyObject> datasets = cli.cursor().getAll();
+        all.addAll(datasets);
+
+        return all;
+    }
     /**
      *
      * @param datasetObj
@@ -351,6 +372,20 @@ public class Scripts {
         cli.cursor().apply(jsonPathPut);
     }
 
+    public static void relativiseDownloads(FlatsyObject object) throws IOException {
+        // knock wood I can use the general form of dataset
+        Dataset dataset = ContentUtil.deserialise(object.retrieveStream(), Dataset.class);
+
+        List<DownloadSection> downloads = dataset.getDownloads();
+        for (DownloadSection downloadSection: downloads) {
+            if (downloadSection.getFile() != null) {
+                Path path = Paths.get(downloadSection.getFile());
+                downloadSection.setFile(path.getFileName().toString());
+            }
+        }
+
+        object.create(ContentUtil.serialise(dataset));
+    }
     public static void main(String[] args) throws IOException, URISyntaxException {
 
         // Fix up some things
@@ -360,21 +395,28 @@ public class Scripts {
                 "$", "type", "timeseries_dataset");
 
         // Set up the database
-        Path root = Paths.get("/Users/thomasridd/git/zebedee/zebedee-cms/src/test/resources/bootstraps");
+        Path root = Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/master");
         FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
 
         // Part one - fix up the regular datasets
         List<FlatsyObject> flatsyObjects = Scripts.datasetFiles(root.toString());
         for (FlatsyObject obj: flatsyObjects) {
-            System.out.println("Moving to subfolders: " + obj.uri);
+            System.out.println("Moving datasets to subfolders: " + obj.uri);
             Scripts.copyDatasetToSubfolders(obj);
         }
 
         // Part two - fix up the timeseries datasets
         flatsyObjects = Scripts.timeseriesDatasets(root.toString());
         for (FlatsyObject obj: flatsyObjects) {
-            System.out.println("Moving to subfolders: " + obj.uri);
+            System.out.println("Moving timeseries datasets to subfolders: " + obj.uri);
             Scripts.copyTimeseriesDatasetToSubfolders(obj);
+        }
+
+        // Part three - fix up the downloads
+        flatsyObjects = Scripts.allDatasets(root.toString());
+        for (FlatsyObject obj: flatsyObjects) {
+            System.out.println("Relativising downloads: " + obj.uri);
+            Scripts.relativiseDownloads(obj);
         }
 
         System.out.println(root.toString());

@@ -396,7 +396,6 @@ public class Scripts {
 
         // Set up the database
         Path root = Paths.get("/Users/thomasridd/Documents/onswebsite/zebedee/master");
-        FlatsyDatabase db = new FlatsyFlatFileDatabase(root);
 
         // Part one - fix up the regular datasets
         List<FlatsyObject> flatsyObjects = Scripts.datasetFiles(root.toString());

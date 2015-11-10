@@ -2,3 +2,5 @@
 .idea
 *.iml
 target
+settings.xml
+DS_Store

@@ -3,6 +3,7 @@ package com.github.thomasridd.flatsy.query;
 import com.github.thomasridd.flatsy.FlatsyObject;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
+import com.github.thomasridd.flatsy.query.matchers.MatcherCommandLineParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +84,7 @@ public class FlatsyQuery {
         return query(FlatsyQueryType.Condition, matcher);
     }
     public FlatsyQuery query(String queryString) {
+
         String cleanedString = queryString.toLowerCase();
 
         if (cleanedString.startsWith("block:")) {

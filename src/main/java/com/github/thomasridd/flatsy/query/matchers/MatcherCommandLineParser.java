@@ -57,6 +57,10 @@ public class MatcherCommandLineParser {
             // folders only
             matcher = new IsFolder();
 
+        } else if (keyword.equalsIgnoreCase("uri_starts")) {
+            // paths where the uri contains a specific string
+            matcher = new UriStartsWith(args.get(2));
+
         } else if (keyword.equalsIgnoreCase("uri_contains")) {
             // paths where the uri contains a specific string
             matcher = new UriContains(args.get(2));
@@ -95,5 +99,13 @@ public class MatcherCommandLineParser {
 
         System.out.println("Could not parse " + filter);
         return cursor;
+    }
+
+    public static FlatsyCursor query(FlatsyCursor cursor, String filter) {
+        String command = filter;
+        if (!filter.toLowerCase().startsWith("filter")) {
+            command = "FILTER " + filter;
+        }
+        return applyFilterToCursor(cursor, command);
     }
 }

@@ -6,6 +6,7 @@ import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
 import com.github.thomasridd.flatsy.operations.operators.FlatsyOperatorBuilder;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
+import com.github.thomasridd.flatsy.query.matchers.MatcherCommandLineParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,16 +140,17 @@ public class FlatsyCursor {
     }
 
     public FlatsyCursor query(String queryString) {
-        String cleanedString = queryString.toLowerCase();
-
-        if (cleanedString.startsWith("block:")) {
-            cleanedString = cleanedString.substring("block:".length());
-            return query(FlatsyQueryType.Blocker, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
-        } else if (cleanedString.startsWith("stop:")) {
-            cleanedString = cleanedString.substring("stop:".length());
-            return query(FlatsyQueryType.ConditionBlocker, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
-        } else {
-            return query(FlatsyQueryType.Condition, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
-        }
+//        String cleanedString = queryString.toLowerCase();
+//
+//        if (cleanedString.startsWith("block:")) {
+//            cleanedString = cleanedString.substring("block:".length());
+//            return query(FlatsyQueryType.Blocker, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
+//        } else if (cleanedString.startsWith("stop:")) {
+//            cleanedString = cleanedString.substring("stop:".length());
+//            return query(FlatsyQueryType.ConditionBlocker, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
+//        } else {
+//            return query(FlatsyQueryType.Condition, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
+//        }
+        return MatcherCommandLineParser.query(this, queryString);
     }
 }

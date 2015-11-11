@@ -67,6 +67,7 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
     @Override
     public String retrieve(FlatsyObject object)  {
         Path path = toPath(object.uri);
+        if(Files.exists(path) == false) return null;
 
         String content = null;
         try {

@@ -42,8 +42,8 @@ public class FlatsyCommandLineTest {
         // we add commands
         cli.runCommand("FROM " + root);
         cli.runCommand("FILTER uri_ends data.json");
-        cli.runCommand("FILTER jsonpath_equals $.type article");
-        cli.runCommand("TABLE $.type $.description.summary");
+        cli.runCommand("FILTER jsonpath $.type equals article");
+        cli.runCommand("TABLE $.type $.description.title");
     }
 
     @Test

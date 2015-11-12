@@ -18,18 +18,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Created by thomasridd on 14/10/15.
- * <p/>
- * Syntax options
- * <p/>
- * FROM [path to root of FlatsyFlatFileDatabase]
- * <p/>
- * FILTER
- * <p/>
- * COPY
- * REPLACE
- * URI_LIST [File path to write list (optional)]
- * FILE_LIST [File path to write list (optional)]
+ * See
  */
 public class FlatsyCommandLine {
     FlatsyDatabase db;
@@ -144,7 +133,7 @@ public class FlatsyCommandLine {
      *
      * @param path the file to run
      * @return success
-     * @throws IOException
+     * @throws IOException if script cannot be read
      */
     public boolean runScript(Path path) throws IOException {
         boolean result = true;
@@ -173,14 +162,16 @@ public class FlatsyCommandLine {
 
 
     /**
-     * Create a cursor from script filters on the specified path
+     * Create a cursor from a saved script
      *
-     * @param path
-     * @return
+     * @param scriptPath the path of the script
+     * @return a flatsy cursor
+     *
+     * @throws IOException if the script cannot be read
      */
-    public FlatsyCursor cursor(Path path) throws IOException {
+    public FlatsyCursor cursor(Path scriptPath) throws IOException {
         db = null;
-        try(Scanner scanner = new Scanner(Files.newInputStream(path))) {
+        try(Scanner scanner = new Scanner(Files.newInputStream(scriptPath))) {
             while (scanner.hasNextLine()) {
                 buildCursor(scanner.nextLine());
             }
@@ -190,8 +181,9 @@ public class FlatsyCommandLine {
 
     /**
      * Create a cursor based on a command list
-     * @param commands
-     * @return
+     *
+     * @param commands an array of commands to run
+     * @return a flatsy cursor
      */
     public FlatsyCursor cursor(List<String> commands) {
         for (String command: commands) {
@@ -200,6 +192,11 @@ public class FlatsyCommandLine {
         return MatcherCommandLineParser.cursorFromFilterCommands(db, queryCommands);
     }
 
+    /**
+     * Create cursor based on currently saved query commands
+     *
+     * @return a flatsy cursor
+     */
     public FlatsyCursor cursor() {
         return MatcherCommandLineParser.cursorFromFilterCommands(db, queryCommands);
     }
@@ -237,7 +234,7 @@ public class FlatsyCommandLine {
      * Apply an operation to the cursor currently defined by queryCommands
      *
      * @param command an operation in Flatsy syntax
-     * @return
+     * @return success
      */
     protected boolean applyOperation(String command) {
         // Simply chuck blank lines

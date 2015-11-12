@@ -151,6 +151,7 @@ public class FlatsyCursor {
 //        } else {
 //            return query(FlatsyQueryType.Condition, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
 //        }
+
         return MatcherCommandLineParser.query(this, queryString);
     }
 }

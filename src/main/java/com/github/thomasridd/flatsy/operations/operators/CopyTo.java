@@ -23,13 +23,13 @@ import java.util.List;
 public class CopyTo implements FlatsyOperator {
     FlatsyDatabase db;
     String newUriExpression;
-    boolean copyFolder = false;
+    boolean copySiblings = false;
 
     /**
      * Create copy object to any database with modified uri
      *
-     * @param db
-     * @param newUriExpression
+     * @param db the FlatsyDatabase to copy to
+     * @param newUriExpression a FlatsyUtil expression for the new uri
      */
     public CopyTo(FlatsyDatabase db, String newUriExpression) {
         this.db = db;
@@ -40,10 +40,11 @@ public class CopyTo implements FlatsyOperator {
      * Create copy object to any database with modified uri
      *
      * @param db any alternate Flatsy database
-     * @param newUriExpression copy all folder contents
+     * @param newUriExpression a FlatsyUtil expression for the new uri
+     * @param copySiblings if true will copy siblings as well as detected objects
      */
-    public CopyTo(FlatsyDatabase db, String newUriExpression, boolean copyFolder) {
-        this.db = db; this.newUriExpression = newUriExpression; this.copyFolder = copyFolder;
+    public CopyTo(FlatsyDatabase db, String newUriExpression, boolean copySiblings) {
+        this.db = db; this.newUriExpression = newUriExpression; this.copySiblings = copySiblings;
     }
 
     /**
@@ -57,7 +58,7 @@ public class CopyTo implements FlatsyOperator {
 
         // Get all objects we need to be copying
         List<FlatsyObject> objectList = new ArrayList<>();
-        if (copyFolder) {
+        if (copySiblings) {
             for (FlatsyObject sibling: object.parent().children()) {
                 objectList.add(sibling);
             }

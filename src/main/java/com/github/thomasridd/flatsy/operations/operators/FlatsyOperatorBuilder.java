@@ -4,14 +4,11 @@ import com.github.davidcarboni.restolino.json.Serialiser;
 
 import java.util.ArrayList;
 
-/**
- * Created by thomasridd on 29/09/15.
- */
 public class FlatsyOperatorBuilder {
     /**
      * tries to parse a query string to a FlatsyOperator object
-     * @param operator a string of the form {<OperatorType>:<Arguments>}
-     * @return
+     * @param operator a string of the form {OperatorType:Arguments}
+     * @return an Operator
      */
     public static FlatsyOperator operatorStringToOperator(String operator) {
         String cleanedString = operator.trim();
@@ -30,7 +27,7 @@ public class FlatsyOperatorBuilder {
             return null;
         }
 
-        FlatsyOperator flatsyOperator = null;
+        FlatsyOperator flatsyOperator;
         if (operatorType.equalsIgnoreCase("json_validate")) {
             flatsyOperator = new JSONValidate();
         } else if (operatorType.equalsIgnoreCase("json_paths_to_console")) {

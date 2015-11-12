@@ -15,12 +15,17 @@ public class FlatsyWorker {
     /**
      * Apply an operation to all objects identified by a cursor
      *
-     * @param operation
+     * @param operation an operation for this worker to apply
      */
     public FlatsyWorker(FlatsyOperator operation) {
         this.operation = operation;
     }
 
+    /**
+     * Apply the workers operation to all objects defined by a cursor
+     *
+     * @param cursor a cursor
+     */
     public void updateAll(FlatsyCursor cursor) {
         while(cursor.next()) {
             this.operation.apply(cursor.currentObject());

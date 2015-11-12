@@ -131,8 +131,8 @@ public class FlatsyFlatFileDatabase implements FlatsyDatabase {
     /**
      * Update an object uri and all child objects
      *
-     * @param object
-     * @param newUri
+     * @param object an object to move
+     * @param newUri a new uri to move it to
      */
     @Override
     public void move(FlatsyObject object, String newUri) {

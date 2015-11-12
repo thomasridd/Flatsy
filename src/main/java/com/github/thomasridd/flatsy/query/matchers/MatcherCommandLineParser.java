@@ -16,9 +16,9 @@ public class MatcherCommandLineParser {
     /**
      * Build a Flatsy cursor from a list of filters
      *
-     * @param db
-     * @param filters
-     * @return
+     * @param db the database to filter
+     * @param filters a list of FILTER statements
+     * @return a cursor
      */
     public static FlatsyCursor cursorFromFilterCommands(FlatsyDatabase db, List<String> filters) {
         FlatsyCursor cursor = db.root().cursor();
@@ -33,14 +33,28 @@ public class MatcherCommandLineParser {
      *
      * @param cursor the cursor
      * @param filter the filter string
-     * @return
+     * @return a filtered version of the cursor
      */
     protected static FlatsyCursor applyFilterToCursor(FlatsyCursor cursor, String filter) {
-        List<String> args = FlatsyUtil.commandArguments(filter);
+        return cursor.query(matcher(filter));
+    }
+
+    /**
+     * Get a matcher based on a Flatsy query language string
+     *
+     * @param filter a single flatsy Filter command (does not need to start filter)
+     * @return
+     */
+    public static FlatsyMatcher matcher(String filter) {
+        String command = filter;
+        if (!filter.toLowerCase().startsWith("filter")) {
+            command = "FILTER " + filter;
+        }
+
+        List<String> args = FlatsyUtil.commandArguments(command);
 
         FlatsyMatcher matcher = null;
         boolean invert = false;
-
 
         if (args.get(1).equalsIgnoreCase("not")) {
             // invert the rest of the filter string
@@ -88,17 +102,11 @@ public class MatcherCommandLineParser {
             }
         }
 
-        // Return result if found
-        if (matcher != null) {
-            if (invert) {
-                return cursor.query(new Not(matcher));
-            } else {
-                return cursor.query(matcher);
-            }
+        if (invert) {
+            return new Not(matcher);
+        } else {
+            return matcher;
         }
-
-        System.out.println("Could not parse " + filter);
-        return cursor;
     }
 
     public static FlatsyCursor query(FlatsyCursor cursor, String filter) {

@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by thomasridd on 14/10/15.
- * <p/>
+ *
  * Utility methods for use by Flatsy
  */
 public class FlatsyUtil {
@@ -44,9 +44,9 @@ public class FlatsyUtil {
      * ++ = single space
      *
      * @param expression an expression
-     * @param object
-     * @return
-     * @throws IOException
+     * @param object a flatsy object to use for dynamic sections
+     * @return a string built using object
+     * @throws IOException if flatsy objects cannot be accessed
      */
     public static String stringExpression(String expression, FlatsyObject object) throws IOException {
         List<String> list = new ArrayList<>();

@@ -7,8 +7,8 @@ public class FlatsyMatcherBuilder {
 
     /**
      * tries to parse a query string to a FlatsyMatcher object
-     * @param query a string of the form {<MatcherType>:<Arguments>}
-     * @return
+     * @param query a string of the form {MatcherType:Arguments}
+     * @return a Flatsy matcher
      */
     public static FlatsyMatcher queryStringToMatcher(String query) {
         String cleanedString = query.trim();

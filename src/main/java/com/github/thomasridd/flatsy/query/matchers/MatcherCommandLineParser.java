@@ -43,7 +43,7 @@ public class MatcherCommandLineParser {
      * Get a matcher based on a Flatsy query language string
      *
      * @param filter a single flatsy Filter command (does not need to start filter)
-     * @return
+     * @return a flatsy matcher
      */
     public static FlatsyMatcher matcher(String filter) {
         String command = filter;

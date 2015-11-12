@@ -50,6 +50,7 @@ public class FlatsyCommandLine {
     /**
      * Create a new FlatsyCommandLine and run a script of commands
      * @param script a path to a script
+     * @throws IOException if script cannot be opened
      */
     public FlatsyCommandLine(Path script) throws IOException {
         runScript(script);

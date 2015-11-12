@@ -4,7 +4,7 @@
 
     <groupId>com.github.thomasridd</groupId>
     <artifactId>Flatsy</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.5-SNAPSHOT</version>
 
     <dependencies>
 

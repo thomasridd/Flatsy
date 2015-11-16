@@ -4,7 +4,7 @@
 
     <groupId>com.github.thomasridd</groupId>
     <artifactId>Flatsy</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6-SNAPSHOT</version>
 
     <dependencies>
 
@@ -59,7 +59,7 @@
         <url>https://github.com/thomasridd/flatsy</url>
         <connection>scm:git:git://github.com/thomasridd/flatsy.git</connection>
         <developerConnection>scm:git:git@github.com:thomasridd/flatsy.git</developerConnection>
-        <tag>Flatsy-0.0.5</tag>
+        <tag>Tag.0.0.5</tag>
     </scm>
 
     <distributionManagement>

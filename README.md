@@ -60,6 +60,8 @@ copy_to <second root> <expression>          // copy files to a uri in the second
 folder_copy_to <second root> <expression>   // copy files and all files in the same directory
 
 replace <old value> <new value>             // replace string in file
+
+
 ```
 
 ##### JSON actions
@@ -68,11 +70,8 @@ Create table using JsonPath values
 table $.path1 $.path2 $.path3
 table <output file path> $.path1 $.path2 $.path3
 
-jsonpath <$.root> put <field> <expression>      // write a value to a json file
-jsonpath <$.root> put <field> <json_string>     // write an object to a json file
-
-jsonpath <$.root> add <field> <expression>      // add a value to an array in a json file
-jsonpath <$.root> put <field> <json_string>     // add an object to an array in a json file
+json <$.root> put <field> <expression>      // write a value to a json file
+json <$.root> add <field> <expression>      // add a value to an array in a json file
 ```
 
 ### Expressions

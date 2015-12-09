@@ -5,7 +5,6 @@ import com.github.thomasridd.flatsy.operations.FlatsyWorker;
 import com.github.thomasridd.flatsy.operations.operators.FlatsyOperator;
 import com.github.thomasridd.flatsy.operations.operators.FlatsyOperatorBuilder;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
-import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
 import com.github.thomasridd.flatsy.query.matchers.MatcherCommandLineParser;
 
 import java.util.ArrayList;

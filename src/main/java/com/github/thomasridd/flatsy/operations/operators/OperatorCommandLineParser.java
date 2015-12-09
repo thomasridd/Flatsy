@@ -1,6 +1,7 @@
 package com.github.thomasridd.flatsy.operations.operators;
 
 import com.github.thomasridd.flatsy.FlatsyFlatFileDatabase;
+import com.github.thomasridd.flatsy.FlatsyObject;
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
 import com.github.thomasridd.flatsy.util.FlatsyUtil;
 
@@ -93,5 +94,9 @@ public class OperatorCommandLineParser {
             }
         }
 
+    }
+
+    public static void applyFromCommand(FlatsyObject object, String command, OutputStream defaultOut) {
+        applyFromCommand(object.cursor(), command, defaultOut);
     }
 }

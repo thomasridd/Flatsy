@@ -2,14 +2,12 @@ package com.github.thomasridd.flatsy;
 
 import com.github.thomasridd.flatsy.operations.operators.OperatorCommandLineParser;
 import com.github.thomasridd.flatsy.query.FlatsyCursor;
-import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
 import com.github.thomasridd.flatsy.query.matchers.MatcherCommandLineParser;
 import com.github.thomasridd.flatsy.util.FlatsyUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -88,6 +86,10 @@ public class FlatsyCommandLine {
 
             // add to the query
             queryCommands.add(command);
+            return true;
+        } else if (action.equalsIgnoreCase("with")) {
+
+
             return true;
         } else if (action.equalsIgnoreCase("clear")) {
             queryCommands = new ArrayList<>();

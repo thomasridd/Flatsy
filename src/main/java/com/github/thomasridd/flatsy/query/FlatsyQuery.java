@@ -2,7 +2,6 @@ package com.github.thomasridd.flatsy.query;
 
 import com.github.thomasridd.flatsy.FlatsyObject;
 import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcher;
-import com.github.thomasridd.flatsy.query.matchers.FlatsyMatcherBuilder;
 import com.github.thomasridd.flatsy.query.matchers.MatcherCommandLineParser;
 
 import java.util.ArrayList;
@@ -89,12 +88,12 @@ public class FlatsyQuery {
 
         if (cleanedString.startsWith("block:")) {
             cleanedString = cleanedString.substring("block:".length());
-            return query(FlatsyQueryType.Blocker, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
+            return query(FlatsyQueryType.Blocker, MatcherCommandLineParser.matcher(cleanedString));
         } else if (cleanedString.startsWith("stop:")) {
             cleanedString = cleanedString.substring("stop:".length());
-            return query(FlatsyQueryType.ConditionBlocker, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
+            return query(FlatsyQueryType.ConditionBlocker, MatcherCommandLineParser.matcher(cleanedString));
         } else {
-            return query(FlatsyQueryType.Condition, FlatsyMatcherBuilder.queryStringToMatcher(cleanedString));
+            return query(FlatsyQueryType.Condition, MatcherCommandLineParser.matcher(cleanedString));
         }
     }
 }

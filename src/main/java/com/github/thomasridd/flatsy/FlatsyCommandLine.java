@@ -89,7 +89,15 @@ public class FlatsyCommandLine {
             return true;
         } else if (action.equalsIgnoreCase("with")) {
 
-
+            if (args.size() >= 3) {
+                String uri = args.get(1).trim();
+                args = args.subList(2, args.size());
+                FlatsyObject object = db.get(uri);
+                if (object.getType() == FlatsyObjectType.JSONFile || object.getType() == FlatsyObjectType.OtherFile) {
+                    OperatorCommandLineParser.applyFromCommand(object, args, defaultOut);
+                    return true;
+                }
+            }
             return true;
         } else if (action.equalsIgnoreCase("clear")) {
             queryCommands = new ArrayList<>();

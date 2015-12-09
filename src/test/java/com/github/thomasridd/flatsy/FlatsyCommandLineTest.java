@@ -6,16 +6,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import static org.junit.Assert.*;
 
 public class FlatsyCommandLineTest {
     Path root = null;
     Path simple = null;
+    Path script = null;
 
     @Before
     public void setUp() throws Exception {
@@ -23,6 +22,10 @@ public class FlatsyCommandLineTest {
 
         root = Builder.copyFlatFiles();
         simple = Builder.cursorTestDatabase();
+
+        // creating script as a before variable
+        // and so we can easily rip down
+        script = Files.createTempFile("script", "flatsy");
     }
 
     @After
@@ -30,6 +33,7 @@ public class FlatsyCommandLineTest {
         // Garbage collection (try to avoid choking the file system)
         FileUtils.deleteDirectory(simple.toFile());
         FileUtils.deleteDirectory(root.toFile());
+        Files.delete(script);
     }
 
     @Test
@@ -78,8 +82,6 @@ public class FlatsyCommandLineTest {
         assertNotEquals("", results);
     }
 
-
-
     private String getScriptOutput(Path script) throws IOException {
         String content = "";
         try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
@@ -94,5 +96,26 @@ public class FlatsyCommandLineTest {
             content = baos.toString("UTF8");
         }
         return content;
+    }
+
+
+    // Operations
+
+    @Test
+    public void withOperator_givenUri_limitsOperationToFile() throws IOException {
+        // Given
+        // a script that implements the operation
+        try(PrintWriter writer = new PrintWriter(script.toFile(), "UTF-8")) {
+            writer.println("from " + root);
+            writer.println("with births/data.json list");
+        }
+
+        // When
+        // we run the script
+        String result = getScriptOutput(script);
+
+        // Then
+        // we expect sensible output
+        assertEquals("births/data.json", result);
     }
 }

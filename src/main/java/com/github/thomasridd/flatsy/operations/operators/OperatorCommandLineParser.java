@@ -22,6 +22,10 @@ public class OperatorCommandLineParser {
     }
     public static void applyFromCommand(FlatsyCursor cursor, String command, OutputStream defaultOut) {
         List<String> args = FlatsyUtil.commandArguments(command);
+        applyFromCommand(cursor, args, defaultOut);
+    }
+
+    public static void applyFromCommand(FlatsyCursor cursor, List<String> args, OutputStream defaultOut) {
 
         String action = args.get(0);
         if (action.equalsIgnoreCase("copy")) {
@@ -98,5 +102,8 @@ public class OperatorCommandLineParser {
 
     public static void applyFromCommand(FlatsyObject object, String command, OutputStream defaultOut) {
         applyFromCommand(object.cursor(), command, defaultOut);
+    }
+    public static void applyFromCommand(FlatsyObject object, List<String> args, OutputStream defaultOut) {
+        applyFromCommand(object.cursor(), args, defaultOut);
     }
 }

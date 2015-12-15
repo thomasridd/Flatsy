@@ -72,6 +72,7 @@ table <output file path> $.path1 $.path2 $.path3
 
 json <$.root> put <field> <expression>      // write a value to a json file
 json <$.root> add <field> <expression>      // add a value to an array in a json file
+
 ```
 
 ### Expressions

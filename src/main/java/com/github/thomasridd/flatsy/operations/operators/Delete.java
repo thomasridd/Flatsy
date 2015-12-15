@@ -21,15 +21,12 @@ import java.util.List;
  *
  */
 public class Delete implements FlatsyOperator {
-    FlatsyDatabase db;
 
     /**
      * Create copy object to an alternate database
      *
-     * @param db any alternate Flatsy database
      */
-    public Delete(FlatsyDatabase db) {
-        this.db = db;
+    public Delete() {
     }
 
     /**
@@ -42,5 +39,14 @@ public class Delete implements FlatsyOperator {
         if (object.getType() == FlatsyObjectType.Null) { return; }
 
         object.db.delete(object);
+        deleteEmptyParents(object);
+    }
+
+    private void deleteEmptyParents(FlatsyObject object) {
+        FlatsyObject folder = object.parent();
+        if (folder.children().size() == 0) {
+            folder.db.delete(folder);
+            deleteEmptyParents(folder) ;
+        };
     }
 }

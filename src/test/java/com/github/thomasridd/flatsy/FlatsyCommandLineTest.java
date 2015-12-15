@@ -116,6 +116,25 @@ public class FlatsyCommandLineTest {
 
         // Then
         // we expect sensible output
-        assertEquals("births/data.json", result);
+        assertEquals("births/data.json\n", result);
+    }
+
+    @Test
+    public void jsonPut_givenJsonObject_putsObject() throws IOException {
+        // Given
+        // a script that implements a complex operation
+        try(PrintWriter writer = new PrintWriter(script.toFile(), "UTF-8")) {
+            writer.println("from " + root);
+            writer.println("with births/data.json json $ put object {\"field\":\"value\"}");
+            writer.println("with births/data.json table $.object.field");
+        }
+
+        // When
+        // we run the script
+        String result = getScriptOutput(script);
+
+        // Then
+        // we expect sensible output
+        assertEquals("births/data.json\tvalue", result.trim());
     }
 }

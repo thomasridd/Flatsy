@@ -48,6 +48,20 @@ public class OperatorCommandLineParser {
             // replace text in each object
             cursor.apply(new Replace(args.get(1), args.get(2)));
 
+        } else if (action.equalsIgnoreCase("rename")) {
+            // replace text in each object
+            cursor.apply(new Rename(args.get(1), args.get(2)));
+
+        } else if (action.equalsIgnoreCase("delete")) {
+            // replace text in each object
+            if (args.size() == 1) {
+                cursor.apply(new Delete());
+            } else {
+                if (cursor.next()) {
+                    FlatsyObject obj = cursor.currentObject();
+                    obj.db.get(args.get(1)).apply(new Delete());
+                }
+            }
         } else if (action.equalsIgnoreCase("list")) {
             // list all matching objects
             if (args.size() > 1) {
@@ -73,7 +87,7 @@ public class OperatorCommandLineParser {
             } else {
                 cursor.apply(new JSONPathsToOutput(defaultOut, paths));
             }
-        } else if (action.equalsIgnoreCase("jsonpath")) {
+        } else if (action.equalsIgnoreCase("json")) {
             String jsonpath = args.get(1);
             String jsonAction = args.get(2);
 

@@ -39,7 +39,7 @@ public class Rename implements FlatsyOperator {
     public void apply(FlatsyObject object) {
         if (object.getType() == FlatsyObjectType.Folder || object.getType() == FlatsyObjectType.Null) { return; }
 
-        if (object.uri.startsWith(oldUri)) {
+        if (object.uri.equalsIgnoreCase(oldUri) || object.uri.startsWith(oldUri + "/")) {
             String newUri = moveTo + object.uri.substring(oldUri.length());
             FlatsyObject newObject = object.db.get(newUri);
             try {

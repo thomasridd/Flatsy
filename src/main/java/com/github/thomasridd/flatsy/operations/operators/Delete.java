@@ -43,10 +43,13 @@ public class Delete implements FlatsyOperator {
     }
 
     private void deleteEmptyParents(FlatsyObject object) {
+
         FlatsyObject folder = object.parent();
-        if (folder.children().size() == 0) {
+        if (folder.children().size() == 0 && !(folder.uri.equalsIgnoreCase("") || folder.uri.equalsIgnoreCase("/"))) {
             folder.db.delete(folder);
-            deleteEmptyParents(folder) ;
+
+            if (!folder.uri.equalsIgnoreCase(folder.parent().uri))
+                deleteEmptyParents(folder) ;
         };
     }
 }

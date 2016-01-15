@@ -92,4 +92,21 @@ public class FlatsyUtil {
         }
         return result;
     }
+
+    /**
+     * Resolve a file string with user home directory
+     *
+     * @param filePath a file path (possibly relative to user)
+     * @return an absolute file path
+     */
+    public static Path pathsGet(String filePath) {
+        if (filePath.length() == 0) {
+            return null;
+        } else if (filePath.startsWith("/")) {
+            return Paths.get(filePath);
+        } else {
+            Path home = Paths.get(System.getProperty("user.home"));
+            return home.resolve(filePath);
+        }
+    }
 }

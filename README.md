@@ -10,17 +10,18 @@
 
 The query language is up and working. Use from an instance of FlatsyCommandLine to run commands individually or as a script  
   
-Example: To list all files from a directory with uri ending .flatsy
+Example: To list all files from a directory
 ```
 from /Users/Tom/
 
 filter files
-filter uri_ends .flatsy
 
 list
 ```
 
 ### Filters
+
+The filter command language has been updated 
 
 ##### Simple filters
 ```
@@ -41,9 +42,9 @@ https://github.com/jayway/JsonPath
 
 Files that contain valid JSON
 ```
-filter jsonpath valid
-filter jsonpath $.field exists
-filter jsonpath $.field equals <value1> <value2> <...>
+where json valid
+where json $.field exists
+where json $.field equals <value1> <value2> <...>
 ```
 
 ### Actions

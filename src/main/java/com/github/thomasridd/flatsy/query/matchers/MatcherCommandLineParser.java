@@ -87,7 +87,7 @@ public class MatcherCommandLineParser {
             // paths where the uri ends with specific string
             matcher = new Find(args.get(2));
 
-        } else if (keyword.equalsIgnoreCase("jsonpath")) {
+        } else if (keyword.equalsIgnoreCase("jsonpath") || keyword.equalsIgnoreCase("json")) {
 
             if (args.get(2).startsWith("$")) {
 
@@ -100,10 +100,24 @@ public class MatcherCommandLineParser {
             } else if (args.get(2).equalsIgnoreCase("valid")) {
                 matcher = new JSONValid();
             }
+        } else if (keyword.equalsIgnoreCase("xls")) {
+            if (args.size() > 1 && args.get(2).equalsIgnoreCase("valid")) {
+                matcher = new ExcelValidXLS();
+            }
+        } else if (keyword.equalsIgnoreCase("xlsx")) {
+            if (args.size() > 1 && args.get(2).equalsIgnoreCase("valid")) {
+                matcher = new ExcelValidXLSX();
+            }
+        } else if (keyword.equalsIgnoreCase("excel")) {
+            if (args.size() > 1 && args.get(2).equalsIgnoreCase("valid")) {
+                matcher = new ExcelValid();
+            }
         }
 
         if (invert) {
             return new Not(matcher);
+        } else if(matcher == null) {
+            return new All();
         } else {
             return matcher;
         }

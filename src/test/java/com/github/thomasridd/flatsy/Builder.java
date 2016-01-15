@@ -1,11 +1,13 @@
 package com.github.thomasridd.flatsy;
 
+import com.github.davidcarboni.ResourceUtils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,6 +49,13 @@ public class Builder {
         FlatsyDatabase db = new FlatsyFlatFileDatabase(tempDir);
 
         return tempDir;
+    }
+
+    public static Path testDatabaseWithResources(String resourceFolderName) throws IOException {
+        Path dir = Files.createTempDirectory(resourceFolderName);
+        FileUtils.copyDirectory(ResourceUtils.getPath("/" + resourceFolderName).toFile(), dir.toFile());
+
+        return dir;
     }
 
     /**

@@ -137,4 +137,42 @@ public class FlatsyCommandLineTest {
         // we expect sensible output
         assertEquals("births/data.json\tvalue", result.trim());
     }
+
+    @Test
+    public void list_givenEmptyList_doesNothing() throws IOException {
+        // Given
+        // a script that implements a complex operation
+        try(PrintWriter writer = new PrintWriter(script.toFile(), "UTF-8")) {
+            writer.println("from " + root);
+            writer.println("filter uri_ends bosstanksidewalkjamnittygritty");
+            writer.println("list");
+        }
+
+        // When
+        // we run the script
+        String result = getScriptOutput(script);
+
+        // Then
+        // we expect sensible output
+        assertEquals("", result.trim());
+    }
+
+    @Test
+    public void filter_givenUnknownCommand_doesNotFilter() throws IOException {
+        // Given
+        // a script that implements a complex operation
+        try(PrintWriter writer = new PrintWriter(script.toFile(), "UTF-8")) {
+            writer.println("from " + root);
+            writer.println("filter unknown_command");
+            writer.println("list");
+        }
+
+        // When
+        // we run the script
+        String result = getScriptOutput(script);
+
+        // Then
+        // we expect sensible output
+        assertNotEquals("", result.trim());
+    }
 }

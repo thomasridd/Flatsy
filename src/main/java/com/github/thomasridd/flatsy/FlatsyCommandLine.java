@@ -76,31 +76,35 @@ public class FlatsyCommandLine {
         List<String> args = FlatsyUtil.commandArguments(command);
 
         String action = args.get(0).trim();
-        if (action.equalsIgnoreCase("from")) {
+        if (action.equalsIgnoreCase("from") || action.equalsIgnoreCase("select")) {
 
             // set the database root
-            db = new FlatsyFlatFileDatabase(Paths.get(args.get(1).trim()));
+            db = new FlatsyFlatFileDatabase(FlatsyUtil.pathsGet(args.get(1).trim()));
             queryCommands = new ArrayList<>();
             return true;
-        } else if (action.equalsIgnoreCase("filter")) {
+        } else if (action.equalsIgnoreCase("filter") || action.equalsIgnoreCase("where") || action.equalsIgnoreCase("and")) {
 
             // add to the query
             queryCommands.add(command);
             return true;
+        } else if (action.equalsIgnoreCase("clear")) {
+
+            // clear query commands
+            queryCommands = new ArrayList<>();
+            return true;
         } else if (action.equalsIgnoreCase("with")) {
 
+            // Apply an operator to a single uri
             if (args.size() >= 3) {
+                // get the uri
                 String uri = args.get(1).trim();
+                // parse the operator
                 args = args.subList(2, args.size());
                 FlatsyObject object = db.get(uri);
-                if (object.getType() == FlatsyObjectType.JSONFile || object.getType() == FlatsyObjectType.OtherFile) {
-                    OperatorCommandLineParser.applyFromCommand(object, args, defaultOut);
-                    return true;
-                }
+
+                OperatorCommandLineParser.applyFromCommand(object, args, defaultOut);
+                return true;
             }
-            return true;
-        } else if (action.equalsIgnoreCase("clear")) {
-            queryCommands = new ArrayList<>();
             return true;
 
         } else if (action.equalsIgnoreCase("print")) {
@@ -111,7 +115,13 @@ public class FlatsyCommandLine {
             }
             return true;
 
-        }else {
+        } else if (action.equalsIgnoreCase("delete") && args.size() > 1) {
+            FlatsyObject object = db.get(args.get(1).trim());
+            if (object.getType() != FlatsyObjectType.Null) {
+                db.delete(object);
+            }
+            return true;
+        } else {
             long start = System.currentTimeMillis();
 
             // run a command
@@ -226,16 +236,19 @@ public class FlatsyCommandLine {
         List<String> args = FlatsyUtil.commandArguments(command);
 
         String action = args.get(0).trim();
-        if (action.equalsIgnoreCase("from")) {
+        if (action.equalsIgnoreCase("select") || action.equalsIgnoreCase("from")) {
 
             // set the database root
-            db = new FlatsyFlatFileDatabase(Paths.get(args.get(1).trim()));
+            db = new FlatsyFlatFileDatabase(FlatsyUtil.pathsGet(args.get(1).trim()));
             queryCommands = new ArrayList<>();
             return true;
-        } else if (action.equalsIgnoreCase("filter")) {
+        } else if (action.equalsIgnoreCase("where") || action.equalsIgnoreCase("and") || action.equalsIgnoreCase("filter")) {
 
             // add to the query
             queryCommands.add(command);
+            return true;
+        } else if (action.equalsIgnoreCase("clear")) {
+            queryCommands = new ArrayList<>();
             return true;
         }
         return false;

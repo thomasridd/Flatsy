@@ -29,9 +29,15 @@ public class FlatsyUtil {
     public static List<String> commandArguments(String command) {
 
         List<String> list = new ArrayList<>();
-        Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(command);
-        while (m.find())
-            list.add(m.group(1).replace("\"", ""));
+        Matcher m = Pattern.compile("([^\"]\\S*|\".+[?\"])\\s*").matcher(command);
+        while (m.find()) {
+            String group = m.group(1);
+            if (group.endsWith("\"") && group.startsWith("\"")) {
+                list.add(group.substring(1, group.length() - 1));
+            } else {
+                list.add(group);
+            }
+        }
         return list;
     }
 

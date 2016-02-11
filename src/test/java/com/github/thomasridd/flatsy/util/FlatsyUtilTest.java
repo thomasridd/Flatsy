@@ -34,6 +34,22 @@ public class FlatsyUtilTest {
     }
 
     @Test
+    public void commandLineParser_givenDoubleQuotedLine_returnsAppropriateArguments() {
+        // Given
+        // a command line with a mixture of arguments
+        String command = "\"\"TRUE\"\" true";
+
+        // When
+        // it is parsed
+        List<String> strings = FlatsyUtil.commandArguments(command);
+
+        // Then
+        // we get appropriate arguments returned
+        assertEquals("\"TRUE\"", strings.get(0));
+        assertEquals("true", strings.get(1));
+    }
+
+    @Test
     public void stringBuilder_givenSimpleExpression_returnsExpectedResult() throws IOException {
         // Given
         // a simple expression
